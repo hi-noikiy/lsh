@@ -622,6 +622,6 @@ public class BaseTest {
 		companyPaySend.setDesc("企业付款测试之1");
 		companyPaySend.setSpbill_create_ip("127.0.0.1");
 		CompanyPayResult result=AppWechatInterfaceInvokeUtil.companyPay(companyPaySend);
-		System.out.println(result.isSuccess());//我
+		System.out.println(result.isSuccess());//我..
 	}
 }
