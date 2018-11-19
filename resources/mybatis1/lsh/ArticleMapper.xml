@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ArticleMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		LSH_ARTICLE
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		ARTICLE_ID,
+		CONTENT,
+		VISITOR_VOLUME,
+		USER_ID,
+		COLLECTION_VOLUME,
+		PRAISE_VOLUME,
+		TITLE,
+		CREATE_DATE,
+		CREATE_USER,
+		UPDATE_DATE,
+		UPDATE_USER,
+		DELETE_STATUS
+	</sql>
+	<!-- 字段 -->
+	<sql id="FieldWithAlias">
+		o.ARTICLE_ID,
+		o.CONTENT,
+		o.VISITOR_VOLUME,
+		o.USER_ID,
+		o.COLLECTION_VOLUME,
+		o.PRAISE_VOLUME,
+		o.TITLE,
+		o.CREATE_DATE,
+		o.CREATE_USER,
+		o.UPDATE_DATE,
+		o.UPDATE_USER,
+		o.DELETE_STATUS
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ARTICLE_ID},
+		#{CONTENT},
+		#{VISITOR_VOLUME},
+		#{USER_ID},
+		#{COLLECTION_VOLUME},
+		#{PRAISE_VOLUME},
+		#{TITLE},
+		#{CREATE_DATE},
+		#{CREATE_USER},
+		#{UPDATE_DATE},
+		#{UPDATE_USER},
+		#{DELETE_STATUS}
+	</sql>
+
+	<!--表名 -->
+	<sql id="collTableName">
+		LSH_COLLECTION
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="collField">
+		COLLECTION_ID,
+		ARTICLE_ID,
+		GOODS_ID,
+		CREATE_DATE,
+		CREATE_USER,
+		UPDATE_DATE,
+		UPDATE_USER,
+		DELETE_STATUS,
+		USER_ID,
+		COLLECTION_TYPE,
+		COLLECTION_ID
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="biemField">
+		a.ARTICLE_ID,
+		a.CONTENT,
+		a.VISITOR_VOLUME,
+		a.USER_ID,
+		a.COLLECTION_VOLUME,
+		a.PRAISE_VOLUME,
+		a.TITLE,
+		a.CREATE_DATE,
+		a.CREATE_USER,
+		a.UPDATE_DATE,
+		a.UPDATE_USER,
+		a.DELETE_STATUS
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="collFieldValue">
+		#{COLLECTION_ID},
+		#{ARTICLE_ID},
+		#{GOODS_ID},
+		#{CREATE_DATE},
+		#{CREATE_USER},
+		#{UPDATE_DATE},
+		#{UPDATE_USER},
+		#{DELETE_STATUS},
+		#{USER_ID},
+		#{COLLECTION_TYPE},
+		#{COLLECTION_ID}
+	</sql>
+
+	<!-- 新增-->
+	<insert id="save" keyProperty="article_id" useGeneratedKeys="true" parameterType="pd">
+		insert into
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除-->
+	<update id="articleDel" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set DELETE_STATUS = #{DELETE_STATUS}
+		where
+			ARTICLE_ID = #{ARTICLE_ID}
+	</update>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+			<if test="CONTENT != null and CONTENT != ''">
+			CONTENT = #{CONTENT},
+			</if>
+			<if test="VISITOR_VOLUME != null">
+			VISITOR_VOLUME = #{VISITOR_VOLUME},
+			</if>
+			<if test="USER_ID != null and USER_ID != ''">
+			USER_ID = #{USER_ID},
+			</if>
+			<if test="COLLECTION_VOLUME != null">
+			COLLECTION_VOLUME = #{COLLECTION_VOLUME},
+			</if>
+			<if test="PRAISE_VOLUME != null">
+			PRAISE_VOLUME = #{PRAISE_VOLUME},
+			</if>
+			<if test="TITLE != null and TITLE != ''">
+			TITLE = #{TITLE},
+			</if>
+			<if test="CREATE_DATE != null and CREATE_DATE != ''">
+			CREATE_DATE = #{CREATE_DATE},
+			</if>
+			<if test="CREATE_USER != null and CREATE_USER != ''">
+			CREATE_USER = #{CREATE_USER},
+			</if>
+			<if test="UPDATE_DATE != null and UPDATE_DATE != ''">
+			UPDATE_DATE = #{UPDATE_DATE},
+			</if>
+			<if test="UPDATE_USER != null and UPDATE_USER != ''">
+			UPDATE_USER = #{UPDATE_USER},
+			</if>
+			<if test="DELETE_STATUS != null and DELETE_STATUS != ''">
+			DELETE_STATUS = #{DELETE_STATUS},
+			</if>
+			ARTICLE_ID = ARTICLE_ID
+		where
+		ARTICLE_ID = #{ARTICLE_ID}
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where
+			ARTICLE_ID = #{ARTICLE_ID}
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件	-->
+					TITLE LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or
+					CONTENT LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or
+					CREATE_USER LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+
+				)
+		</if>
+		<if test="pd.lastStart!= null and pd.lastStart != ''">
+			and create_date &gt;= #{pd.lastStart}
+		</if>
+		<if test="pd.lastEnd!= null and pd.lastEnd != ''">
+			and	TO_DAYS(create_date) &lt;= TO_DAYS(#{pd.lastEnd})
+		</if>
+		ORDER BY create_date desc
+	</select>
+
+	<!-- 查询帖子是否被点赞和全部帖子列表       -->
+	<select id="datalistPage3" parameterType="page" resultType="pd">
+		SELECT
+			<include refid="biemField"></include>,
+			IF(p.user_id IS NOT NULL,1,0) as PRAISEID,
+			IF(c.user_id IS NOT NULL,1,0) as COLLID,
+			GROUP_CONCAT(ps.path) AS ARTICLE_PATH,
+			(select t.path from lsh_app_user u LEFT JOIN tb_pictures t on u.picture_id = t.PICTURES_ID where a.user_id = u.user_id) as PATH,
+			(
+			SELECT
+				COUNT(*)
+			FROM
+				lsh_article_comment c
+			WHERE
+				c.article_id = a.article_id
+		) AS COMMENT_COUNT,
+		us.SEX
+		FROM
+			lsh_article a
+		LEFT JOIN lsh_praise p ON a.article_id = p.article_id
+		AND p.user_id =#{pd.USER_ID}
+		LEFT JOIN lsh_collection c ON a.article_id = c.article_id
+		AND c.user_id =#{pd.USER_ID}
+		LEFT JOIN lsh_article_picture ap ON ap.article_id = a.article_id
+		LEFT JOIN tb_pictures ps ON ps.pictures_id = ap.picture_id
+		LEFT JOIN lsh_app_user us ON us.user_id = a.user_id
+		GROUP BY
+			a.article_id
+		ORDER BY a.create_date desc
+
+	</select>
+	
+	
+	
+	<!--   和我的帖子-->
+	<select id="datalistPage7" parameterType="page" resultType="pd">
+		SELECT
+			<include refid="biemField"></include>,
+			IF(p.user_id IS NOT NULL,1,0) as PRAISEID,
+			IF(c.user_id IS NOT NULL,1,0) as COLLID,
+			GROUP_CONCAT(ps.path) AS ARTICLE_PATH,
+			(select t.path from lsh_app_user u LEFT JOIN tb_pictures t on u.picture_id = t.PICTURES_ID where a.user_id = u.user_id) as PATH,
+			(
+			SELECT
+				COUNT(*)
+			FROM
+				lsh_article_comment c
+			WHERE
+				c.article_id = a.article_id
+		) AS COMMENT_COUNT,
+		us.SEX
+		FROM
+			lsh_article a
+		LEFT JOIN lsh_praise p ON a.article_id = p.article_id
+		AND p.user_id =#{pd.USER_ID}
+		LEFT JOIN lsh_collection c ON a.article_id = c.article_id
+		AND c.user_id =#{pd.USER_ID}
+		LEFT JOIN lsh_article_picture ap ON ap.article_id = a.article_id
+		LEFT JOIN tb_pictures ps ON ps.pictures_id = ap.picture_id
+		LEFT JOIN lsh_app_user us ON us.user_id = a.user_id
+		where a.user_id = #{pd.USER_ID}
+		GROUP BY
+			a.article_id
+		ORDER BY a.create_date desc
+
+	</select>
+
+
+
+<!-- app我的帖子列表列表 -->
+	<select id="datalistPage5" parameterType="page" resultType="pd">
+		select
+		<include refid="FieldWithAlias"></include>
+		from
+		<include refid="tableName"></include> o
+		where 1=1
+		<if test="pd.USER_ID!=null and pd.USER_ID!=''">
+			and o.USER_ID=#{pd.USER_ID}
+		</if>
+		ORDER BY o.create_date desc
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="FieldWithAlias"></include>
+		from
+		<include refid="tableName"></include> o
+		where 1=1
+		<if test="USER_ID!=null and USER_ID!=''">
+			and o.USER_ID=#{USER_ID}
+		</if>
+		order by o.CREATE_DATE DESC
+		<if test="start_number!=null ">
+			limit #{start_number},#{SET_NUMBER}
+		</if>
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+			ARTICLE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	<!-- 帖子详情 -->
+	<select id="articleDetail" parameterType="pd" resultType="pd">
+		SELECT
+			<include refid="biemField"></include>,
+			GROUP_CONCAT(p.path) AS PATH,
+			t.PATH as USERPATH,
+			u.nick_name as ARTICLENAME
+		FROM
+			lsh_article a
+		LEFT JOIN lsh_article_picture ap ON ap.article_id = a.article_id
+		LEFT JOIN tb_pictures p ON p.pictures_id = ap.picture_id
+		LEFT JOIN lsh_app_user u on u.user_id = a.user_id
+		LEFT JOIN tb_pictures t on t.PICTURES_ID = u.picture_id
+		WHERE
+			a.article_id = #{ARTICLE_ID}
+		GROUP BY
+			a.article_id
+	</select>
+
+
+	<!-- 帖子点赞-->
+	<insert id="articlePraise" parameterType="pd">
+		<!-- <selectKey keyProperty="ARTICLE_ID" order="AFTER" resultType="java.lang.Integer">
+			select LAST_INSERT_ID()
+		</selectKey> -->
+		insert into lsh_praise(article_id,user_id) values (#{ARTICLE_ID},#{USER_ID})
+	</insert>
+
+	<!-- 查询用户是否点赞过该帖子-->
+	<select id="isPraise" parameterType="pd" resultType="pd">
+		select * from  lsh_praise where article_id=#{ARTICLE_ID} and user_id = #{USER_ID}
+	</select>
+
+	<!-- 取消点赞删除点赞表数据 -->
+	<delete id="articlePraiseDel" parameterType="pd">
+		delete from lsh_praise where article_id=#{ARTICLE_ID} and user_id = #{USER_ID}
+	</delete>
+
+	<!-- 帖子评论列表 -->
+	<select id="datalistPage1" parameterType="page" resultType="pd">
+		select
+		C.ARTICLECOMMENT_ID,
+		C.ARTICLE_ID,
+		C.CONTENT,
+		C.USER_ID,
+		C.CREATE_DATE,
+		C.CREATE_USER,
+		C.UPDATE_DATE,
+		C.UPDATE_USER,
+		C.DELETE_STATUS,
+		C.PARENT_ID,
+		C.TOP_PARENT_ID,
+		U.NICK_NAME,
+		T.PATH
+		FROM
+		LSH_ARTICLE_COMMENT C
+		LEFT JOIN LSH_APP_USER U ON C.USER_ID=U.USER_ID
+		LEFT JOIN tb_pictures t on u.picture_id = t.PICTURES_ID
+		where 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件-->
+					U.NICK_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or
+					C.CONTENT LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+		<if test="pd.lastStart!= null and pd.lastStart != ''">
+			and C.CREATE_DATE &gt;= #{pd.lastStart}
+		</if>
+		<if test="pd.lastEnd!= null and pd.lastEnd != ''">
+			and	TO_DAYS(C.CREATE_DATE) &lt;= TO_DAYS(#{pd.lastEnd})
+		</if>
+		and C.ARTICLE_ID = #{pd.ARTICLE_ID}
+		and C.PARENT_ID IS NULL
+		and C.TOP_PARENT_ID IS NULL
+		ORDER BY C.CREATE_DATE ASC
+	</select>
+	<!-- 帖子回复列表 -->
+	<select id="datalistPage2" parameterType="page" resultType="pd">
+		SELECT
+			u1.nick_name AS MUNICK,
+			(
+				SELECT
+					u.nick_name
+				FROM
+					lsh_article_comment c1,
+					lsh_app_user u
+				WHERE
+					u.user_id = c1.user_id
+				AND c1.articlecomment_id = c.parent_id
+				AND c.parent_id <![CDATA[<>]]> #{pd.TOP_PARENT_ID}
+			) AS OTHERNICK,
+			c.CONTENT,
+			c.CREATE_DATE
+		FROM
+			lsh_article_comment c
+		LEFT JOIN lsh_app_user u1 ON c.user_id = u1.user_id
+		WHERE 1=1
+
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件-->
+					U1.NICK_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or
+					C.CONTENT LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+		<if test="pd.lastStart!= null and pd.lastStart != ''">
+			and C.CREATE_DATE &gt;= #{pd.lastStart}
+		</if>
+		<if test="pd.lastEnd!= null and pd.lastEnd != ''">
+			and	TO_DAYS(C.CREATE_DATE) &lt;= TO_DAYS(#{pd.lastEnd})
+		</if>
+		and c.top_parent_id = #{pd.TOP_PARENT_ID}
+		ORDER BY
+			c.articlecomment_id
+	</select>
+
+	<!-- app帖子回复列表不分页 -->
+	<select id="appQueryReply" parameterType="pd" resultType="pd">
+		SELECT
+			u1.nick_name AS MUNICK,
+			(
+				SELECT
+					u.nick_name
+				FROM
+					lsh_article_comment c1,
+					lsh_app_user u
+				WHERE
+					u.user_id = c1.user_id
+				AND c1.articlecomment_id = c.parent_id
+				AND c.parent_id <![CDATA[<>]]> #{TOP_PARENT_ID}
+			) AS OTHERNICK,
+			c.CONTENT,
+			c.CREATE_DATE,
+			c.ARTICLECOMMENT_ID,
+			c.TOP_PARENT_ID,
+			c.PARENT_ID
+		FROM
+			lsh_article_comment c
+		LEFT JOIN lsh_app_user u1 ON c.user_id = u1.user_id
+		WHERE 1=1
+		and c.top_parent_id = #{TOP_PARENT_ID}
+		ORDER BY
+			c.articlecomment_id
+	</select>
+	
+	
+	<!-- 我的回复  回复我的 -->
+	<select id="datalistPage6" parameterType="page" resultType="pd">
+		SELECT
+			c.content AS MYCOMMENT,
+			a.title AS TITLE,
+			c1.content AS OTHERCOMMENT,
+			u.nick_name AS MYNICKNAME,
+			u1.nick_name AS OTHERNICKNAME,
+			p.PATH AS MYPATH,
+			p1.PATH AS OTHERPATH,
+			c.create_date AS COMMENTDATE,
+			c.articlecomment_id AS MYCOMMENTID,
+			c1.articlecomment_id AS OTHERCOMMENTID,
+			c.ARTICLE_ID
+		FROM
+			lsh_article_comment c
+		LEFT JOIN lsh_article a ON c.article_id = a.article_id
+		LEFT JOIN lsh_article_comment c1 ON c.parent_id = c1.articlecomment_id
+		LEFT JOIN lsh_app_user u ON c.user_id = u.user_id
+		LEFT JOIN lsh_app_user u1 ON c1.user_id = u1.user_id
+		LEFT JOIN tb_pictures p ON u.picture_id = p.PICTURES_ID
+		LEFT JOIN tb_pictures p1 ON u1.picture_id = p1.PICTURES_ID
+		WHERE
+			<if test="pd.USER_ID != null and pd.USER_ID != ''">
+				c.user_id = #{pd.USER_ID}
+			</if>
+			<if test="pd.OTHER_USER_ID != null and pd.OTHER_USER_ID != ''">
+				c1.user_id = #{pd.OTHER_USER_ID}
+			</if>
+		ORDER BY  c.create_date desc
+	</select>
+</mapper>

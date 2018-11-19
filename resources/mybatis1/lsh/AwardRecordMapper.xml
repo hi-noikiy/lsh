@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AwardRecordMapper">
+
+	<!--表名 -->
+	<sql id="tableName">
+		LSH_AWARD_RECORD
+	</sql>
+
+	<!-- 字段 -->
+	<sql id="Field">
+		RECORD_ID,
+		CREATE_DATE,
+		USER_ID,
+		AWARD_ID,
+		CART_ID,
+		STEP,
+		IS_LOGIN,
+		IS_SECOND,
+		ORDER_ID
+	</sql>
+	<!-- 字段 -->
+	<sql id="FieldWithAlias">
+		o.RECORD_ID,
+		o.CREATE_DATE,
+		o.USER_ID,
+		o.AWARD_ID,
+		o.CART_ID,
+		o.STEP,
+		o.IS_LOGIN,
+		o.IS_SECOND,
+		o.ORDER_ID
+	</sql>
+
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{RECORD_ID},
+		#{CREATE_DATE},
+		#{USER_ID},
+		#{AWARD_ID},
+		#{CART_ID},
+		#{STEP},
+		#{IS_LOGIN},
+		#{IS_SECOND},
+		#{ORDER_ID}
+	</sql>
+
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where
+			RECORD_ID = #{RECORD_ID}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+			<if test="CREATE_DATE!= null and CREATE_DATE!= ''">
+			CREATE_DATE = #{CREATE_DATE},
+			</if>
+			<if test="USER_ID!= null">
+			USER_ID = #{USER_ID},
+			</if>
+			<if test="AWARD_ID!= null">
+			AWARD_ID = #{AWARD_ID},
+			</if>
+			<if test="CART_ID!= null">
+			CART_ID = #{CART_ID},
+			</if>
+			<if test="STEP!= null">
+			STEP = #{STEP},
+			</if>
+			<if test="IS_LOGIN!= null">
+			IS_LOGIN = #{IS_LOGIN},
+			</if>
+			<if test="IS_SECOND!= null">
+			IS_SECOND = #{IS_SECOND},
+			</if>
+			<if test="ORDER_ID!= null and ORDER_ID!=''">
+			ORDER_ID = #{ORDER_ID},
+			</if>
+		RECORD_ID = RECORD_ID
+		where
+		RECORD_ID = #{RECORD_ID}
+	</update>
+	<!-- 通过用户ID和购物车ID修改对应的订单ID -->
+	<update id="editOrder" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+			<if test="ORDER_ID!= null and ORDER_ID!=''">
+			ORDER_ID = #{ORDER_ID},
+			</if>
+			<if test="STEP!= null and STEP!=''">
+			STEP = #{STEP},
+			</if>
+			RECORD_ID=RECORD_ID
+		where
+		1=1
+		<if test="USER_ID!= null">
+			and USER_ID = #{USER_ID}
+		</if>
+		<if test="CART_ID!= null">
+			and	CART_ID = #{CART_ID}
+		</if>
+	</update>
+
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where
+			RECORD_ID = #{RECORD_ID}
+	</select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="FieldWithAlias"></include>,
+		g.GOODS_NAME,
+		tp.PATH,
+		tp1.PATH AS PATH1,
+		a1.NICK_NAME,
+		a1.PHONE_NUMBER,
+		a.TYPE,
+		a.AWARD_NAME,
+		orr.ORDER_STATUS,
+		orr.PAY_TIME,
+		tp2.PATH AS PATH2
+		from
+		<include refid="tableName"></include> o
+		LEFT JOIN LSH_APP_USER a1 on o.USER_ID = a1.USER_ID
+		LEFT JOIN lsh_award a on o.AWARD_ID = a.AWARD_ID
+		LEFT JOIN lsh_goods g on a.GOODS_ID=g.GOODS_ID
+		LEFT JOIN tb_pictures tp on g.PICTURE_ID=tp.PICTURES_ID
+		LEFT JOIN tb_pictures tp1 on a.PICTURE_ID=tp1.PICTURES_ID
+		LEFT JOIN tb_pictures tp2 on a1.PICTURE_ID=tp2.PICTURES_ID
+		LEFT JOIN lsh_order orr on o.ORDER_ID=orr.ORDER_ID
+		where 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				<!--	根据需求自己加检索条件
+					字段1 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or
+					字段2 LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				-->
+					g.GOODS_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+					 or
+					a1.NICK_NAME LIKE CONCAT(CONCAT('%', #{pd.keywords}),'%')
+				)
+		</if>
+		<if test="pd.lastStart!= null and pd.lastStart != ''">
+			and  o.CREATE_DATE &gt;= #{pd.lastStart}
+		</if>
+		<if test="pd.lastEnd!= null and pd.lastEnd != ''">
+			and	TO_DAYS(o.CREATE_DATE) &lt;= TO_DAYS(#{pd.lastEnd})
+		</if>
+		<if test="pd.TYPE!= null and pd.TYPE!= ''">
+			and  a.TYPE = #{pd.TYPE}
+		</if>
+		<!-- <if test="pd.STATUS!= null and pd.STATUS!= ''">
+			and  o.STATUS = #{pd.STATUS}
+		</if> -->
+		order by o.CREATE_DATE DESC
+	</select>
+	<!--app我的抽奖展示使用 列表 -->
+	<select id="datalistPage1" parameterType="page" resultType="pd">
+		select
+		<include refid="FieldWithAlias"></include>,
+		g.GOODS_NAME,
+		g.GOODS_ID,
+		a.TYPE,
+		a.AWARD_NAME,
+		tp.PATH,
+		orr.ORDER_STATUS,
+		tp1.PATH AS PATH1,
+		DATE_FORMAT(orr.PAY_TIME,'%Y-%m-%d') as GET_DATE1
+		from
+		<include refid="tableName"></include> o
+		LEFT JOIN lsh_award a on o.AWARD_ID = a.AWARD_ID
+		LEFT JOIN lsh_goods g on a.GOODS_ID=g.GOODS_ID
+		LEFT JOIN tb_pictures tp on g.PICTURE_ID=tp.PICTURES_ID
+		LEFT JOIN tb_pictures tp1 on a.PICTURE_ID=tp1.PICTURES_ID
+		LEFT JOIN lsh_order orr on o.ORDER_ID=orr.ORDER_ID
+		where 1=1
+		<if test="pd.lastStart!= null and pd.lastStart != ''">
+			and  o.CREATE_DATE &gt;= #{pd.lastStart}
+		</if>
+		<if test="pd.lastEnd!= null and pd.lastEnd != ''">
+			and	TO_DAYS(o.CREATE_DATE) &lt;= TO_DAYS(#{pd.lastEnd})
+		</if>
+		<if test="pd.USER_ID!= null and pd.USER_ID!= ''">
+			and  o.USER_ID = #{pd.USER_ID}
+		</if>
+		order by o.CREATE_DATE DESC
+	</select>
+
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="FieldWithAlias"></include>,
+		g.GOODS_NAME,
+		a.TYPE,
+		a.AWARD_NAME,
+		tp.PATH,
+		tp1.PATH AS PATH1,
+		DATE_FORMAT(o.GET_DATE,'%Y-%m-%d') as GET_DATE
+		from
+		<include refid="tableName"></include> o
+		LEFT JOIN lsh_award a on o.AWARD_ID = a.AWARD_ID
+		LEFT JOIN lsh_goods g on a.GOODS_ID=g.GOODS_ID
+		LEFT JOIN tb_pictures tp on g.PICTURE_ID=tp.PICTURES_ID
+		LEFT JOIN tb_pictures tp1 on a.PICTURE_ID=tp1.PICTURES_ID
+		where 1=1
+		<if test="USER_ID!=null and USER_ID!=''">
+           and	USER_ID=#{USER_ID}
+		</if>
+		<!-- <if test="STATUS!=null">
+           and	STATUS=#{STATUS}
+		</if> -->
+		and  a.IS_SECOND = 0
+		order by o.CREATE_DATE desc
+		<if test="start_number!=null ">
+			limit #{start_number},#{SET_NUMBER}
+		</if>
+	</select>
+
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where
+			RECORD_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+<!-- 通过ID获取数据 -->
+	<select id="findByIdLoginAndB" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from
+		<include refid="tableName"></include>
+		where 1=1
+		<if test="USER_ID!=null and USER_ID!=''">
+           and	USER_ID=#{USER_ID}
+		</if>
+		<if test="IS_LOGIN_L!=null and IS_LOGIN_L!=''">
+           and	IS_LOGIN=1
+		</if>
+		<if test="IS_LOGIN!=null and IS_LOGIN!=''">
+           and	IS_LOGIN=2
+           and  YEAR(CREATE_DATE)=YEAR(NOW());
+		</if>
+	</select>
+
+</mapper>
