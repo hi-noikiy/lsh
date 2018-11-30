@@ -54,7 +54,7 @@ public class AppPayController extends BaseController {
 	private AppuserManager appuserService;
 	
 	/**
-	 * 
+	 * 购买金豆
 	 * @param userId 用户id
 	 * @param agentId 代理配置id
 	 * @param beanId 金豆充值id
@@ -63,9 +63,9 @@ public class AppPayController extends BaseController {
 	 * @throws Exception
 	 */
 	@Transactional
-	@RequestMapping(value = "/pay")
+	@RequestMapping(value = "/buyGold")
 	@ResponseBody
-	public Object pay(String userId, String agentId,String beanId, String payment, Double money,String ipAddress) throws Exception {
+	public Object buyGold(String userId, String agentId,String beanId, String payment, Double money,String ipAddress) throws Exception {
 		
 		Map<String, Object> aliResult = new HashMap<String, Object>();
 		String number ="";
@@ -227,5 +227,75 @@ public class AppPayController extends BaseController {
 		purchase.put("PAY_TIME", Tools.date2Str(new Date()));
 		agentpurchaseService.save(purchase);
 		return "修改成功";
+	}
+	
+	/**
+	 * 购买金豆
+	 * @param userId 用户id
+	 * @param agentId 代理配置id
+	 * @param beanId 金豆充值id
+	 * @param payment 支付方式（0.微信）
+	 * @param money 支付金额（1.支付宝）
+	 * @throws Exception
+	 */
+	@Transactional
+	@RequestMapping(value = "/buyGift")
+	@ResponseBody
+	public Object pay(String userId, String agentId,String beanId, String payment, Double money,String ipAddress) throws Exception {
+		
+		Map<String, Object> aliResult = new HashMap<String, Object>();
+		String number ="";
+		if (payment.equals("0")) {
+			String type = "0";
+			//微信
+			if (null != agentId && !agentId.equals("")) {
+				//代理购买
+				number = purchaseAdd(userId,  agentId,  money, type);
+			}else if (null != beanId && !beanId.equals("")) {
+				//金豆充值
+				number = rechargeAdd(userId,  beanId,  money, type);
+			}
+			UnifiedOrderSend unifiedOrderSend = new UnifiedOrderSend();
+			// send.set
+			unifiedOrderSend.setBody("礼尚汇商品");
+			unifiedOrderSend.setOut_trade_no(number);
+			Double realPay = Double.valueOf(money) * 100;
+			String real_pay = realPay.toString();
+			String fee = real_pay;
+			if (fee.contains(".")) {
+				fee = fee.substring(0, fee.indexOf("."));
+			}
+			//unifiedOrderSend.setTotal_fee(Integer.valueOf(fee));
+			unifiedOrderSend.setTotal_fee(1);
+			unifiedOrderSend.setSpbill_create_ip(ipAddress);
+			unifiedOrderSend.setTrade_type("APP");
+			UnifiedOrderResult result = AppWechatInterfaceInvokeUtil
+					.unifiedOrder(unifiedOrderSend);
+			Map<String, Object> wxResult = SignUtil.signOrderResult4App(result);
+			wxResult.put("paytype", "wxpay");
+			wxResult.put("order_id", number);
+			
+		} else if(payment.equals("1")) {
+			String type = "1";
+			//支付宝
+			if (null != agentId && !agentId.equals("")) {
+				//代理购买
+				number = purchaseAdd(userId,  agentId,  money, type);
+			}else if (null != beanId && !beanId.equals("")) {
+				//金豆充值
+				number = rechargeAdd(userId,  beanId,  money, type);
+			}
+			aliResult.put("paytype", "alipay");
+			/*String alipayMessge = AlipayInterfaceInvokeUtil.AlipayTradeAppPay(
+					"礼尚汇商品", "礼尚汇支付", out_order_id, real_pay);*/
+			String outtradeno = number;
+			String totalAmount = "0.01";
+			String alipayMessge = AlipayInterfaceInvokeUtil.AlipayTradeAppPay(
+					"礼尚汇商品", "礼尚汇支付", outtradeno, totalAmount);
+			aliResult.put("alipaymessge", alipayMessge
+					.replaceAll("\u003d", "=").replaceAll("\u0026", "&"));
+			aliResult.put("order_id", number);
+		}
+		return aliResult;
 	}
 }
