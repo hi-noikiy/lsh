@@ -1,4 +1,4 @@
-﻿package spiderman.util.base;
+package spiderman.util.base;
 
 import java.io.BufferedReader;
 import java.io.IOException;

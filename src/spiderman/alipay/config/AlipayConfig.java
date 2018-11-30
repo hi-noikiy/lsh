@@ -1,4 +1,4 @@
-﻿package spiderman.alipay.config;
+package spiderman.alipay.config;
 
 public class AlipayConfig {
 	// 商户appid
