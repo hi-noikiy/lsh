@@ -1,38 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="AgentMapper">
+<mapper namespace="CakeTicketsMapper">
 	
 	<!--表名 -->
 	<sql id="tableName">
-		LSH_AGENT
+		LSH_CAKE_TICKETS
 	</sql>
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		AGENT_ID,	
-		PRICE,	
-		TITLE,	
-		ITEMS,
-		STATUS,
-		TERM,	
+		USER_ID,	
+		REMARKS,	
+		STATUS,	
+		MODIFY_TICKET,	
+		CAKE_TICKET,	
+		CREATE_DATE,	
 		CREATE_USER,	
-		CREATE_TIME,	
-		UPDATE_USER,	
-		UPDATE_TIME
+		DELETE_STATUS,	
+		CAKETICKETS_ID
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{AGENT_ID},	
-		#{PRICE},	
-		#{TITLE},	
-		#{ITEMS},	
+		#{USER_ID},	
+		#{REMARKS},	
 		#{STATUS},	
-		#{TERM},	
+		#{MODIFY_TICKET},	
+		#{CAKE_TICKET},	
+		#{CREATE_DATE},	
 		#{CREATE_USER},	
-		#{CREATE_TIME},	
-		#{UPDATE_USER},	
-		#{UPDATE_TIME}
+		#{DELETE_STATUS},	
+		#{CAKETICKETS_ID}
 	</sql>
 	
 	<!-- 新增-->
@@ -51,7 +49,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			AGENT_ID = #{AGENT_ID}
+			CAKETICKETS_ID = #{CAKETICKETS_ID}
 	</delete>
 	
 	<!-- 修改 -->
@@ -59,16 +57,13 @@
 		update
 		<include refid="tableName"></include>
 		set 
-			PRICE = #{PRICE},
-			TITLE = #{TITLE},
-			ITEMS = #{ITEMS},
+			USER_ID = #{USER_ID},
+			REMARKS = #{REMARKS},
 			STATUS = #{STATUS},
-			TERM = #{TERM},
-			UPDATE_USER = #{UPDATE_USER},
-			UPDATE_TIME = #{UPDATE_TIME},
-		AGENT_ID = AGENT_ID
+			MODIFY_TICKET = #{MODIFY_TICKET},
+			CAKE_TICKET = #{CAKE_TICKET},
 		where 
-		AGENT_ID = #{AGENT_ID}
+		CAKETICKETS_ID = #{CAKETICKETS_ID}
 	</update>
 	
 	<!-- 通过ID获取数据 -->
@@ -78,7 +73,7 @@
 		from 
 		<include refid="tableName"></include>
 		where 
-			AGENT_ID = #{AGENT_ID}
+			CAKETICKETS_ID = #{CAKETICKETS_ID}
 	</select>
 	
 	<!-- 列表 -->
@@ -98,7 +93,6 @@
 				-->
 				)
 		</if>
-		order by CREATE_TIME desc
 	</select>
 	
 	<!-- 列表(全部) -->
@@ -107,7 +101,6 @@
 		<include refid="Field"></include>
 		from 
 		<include refid="tableName"></include>
-		order by CREATE_TIME desc
 	</select>
 	
 	<!-- 批量删除 -->
@@ -115,7 +108,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			AGENT_ID in
+			CAKETICKETS_ID in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>

@@ -1,38 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="AgentMapper">
+<mapper namespace="GoldBeansMapper">
 	
 	<!--表名 -->
 	<sql id="tableName">
-		LSH_AGENT
+		LSH_GOLDBEANS
 	</sql>
 	
 	<!-- 字段 -->
 	<sql id="Field">
-		AGENT_ID,	
-		PRICE,	
-		TITLE,	
-		ITEMS,
-		STATUS,
-		TERM,	
+		APPLY_ID,	
+		APPLY_ORDER,	
+		USER_ID,	
+		STATUS,	
+		GLODBEANS,	
+		MODIFY_GLODBEANS,	
+		TYPE,	
+		CREATE_DATE,	
 		CREATE_USER,	
-		CREATE_TIME,	
-		UPDATE_USER,	
-		UPDATE_TIME
+		DELETE_STATUS,	
+		GOLDBEANS_ID,
+		REMARKS
 	</sql>
 	
 	<!-- 字段值 -->
 	<sql id="FieldValue">
-		#{AGENT_ID},	
-		#{PRICE},	
-		#{TITLE},	
-		#{ITEMS},	
+		#{APPLY_ID},	
+		#{APPLY_ORDER},	
+		#{USER_ID},	
 		#{STATUS},	
-		#{TERM},	
+		#{GLODBEANS},	
+		#{MODIFY_GLODBEANS},	
+		#{TYPE},	
+		#{CREATE_DATE},	
 		#{CREATE_USER},	
-		#{CREATE_TIME},	
-		#{UPDATE_USER},	
-		#{UPDATE_TIME}
+		#{DELETE_STATUS},	
+		#{GOLDBEANS_ID}
+		#{REMARKS}
 	</sql>
 	
 	<!-- 新增-->
@@ -51,7 +55,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			AGENT_ID = #{AGENT_ID}
+			GOLDBEANS_ID = #{GOLDBEANS_ID}
 	</delete>
 	
 	<!-- 修改 -->
@@ -59,16 +63,17 @@
 		update
 		<include refid="tableName"></include>
 		set 
-			PRICE = #{PRICE},
-			TITLE = #{TITLE},
-			ITEMS = #{ITEMS},
+			APPLY_ID = #{APPLY_ID},
+			APPLY_ORDER = #{APPLY_ORDER},
+			USER_ID = #{USER_ID},
 			STATUS = #{STATUS},
-			TERM = #{TERM},
-			UPDATE_USER = #{UPDATE_USER},
-			UPDATE_TIME = #{UPDATE_TIME},
-		AGENT_ID = AGENT_ID
+			GLODBEANS = #{GLODBEANS},
+			MODIFY_GLODBEANS = #{MODIFY_GLODBEANS},
+			TYPE = #{TYPE},
+			REMARKS=#{REMARKS}
+		GOLDBEANS_ID = GOLDBEANS_ID
 		where 
-		AGENT_ID = #{AGENT_ID}
+		GOLDBEANS_ID = #{GOLDBEANS_ID}
 	</update>
 	
 	<!-- 通过ID获取数据 -->
@@ -78,7 +83,7 @@
 		from 
 		<include refid="tableName"></include>
 		where 
-			AGENT_ID = #{AGENT_ID}
+			GOLDBEANS_ID = #{GOLDBEANS_ID}
 	</select>
 	
 	<!-- 列表 -->
@@ -98,7 +103,6 @@
 				-->
 				)
 		</if>
-		order by CREATE_TIME desc
 	</select>
 	
 	<!-- 列表(全部) -->
@@ -107,7 +111,6 @@
 		<include refid="Field"></include>
 		from 
 		<include refid="tableName"></include>
-		order by CREATE_TIME desc
 	</select>
 	
 	<!-- 批量删除 -->
@@ -115,7 +118,7 @@
 		delete from
 		<include refid="tableName"></include>
 		where 
-			AGENT_ID in
+			GOLDBEANS_ID in
 		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
                  #{item}
 		</foreach>
