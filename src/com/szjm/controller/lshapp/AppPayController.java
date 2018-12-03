@@ -185,15 +185,34 @@ public class AppPayController extends BaseController {
 		agentpurchaseService.save(pd);
 		
 		//给用户添加金豆
+		/*PageData user = new PageData();
+		user.put("USER_ID", user);
+		user = appuserService.findByUiId(user);
+		Integer  integration = Integer.parseInt(user.get("INTEGRATION").toString());
+		Integer  bean_number = Integer.parseInt(bean.get("BEAN_NUMBER").toString());
+		user.put("INTEGRATION", integration+bean_number);
+		appuserService.saveU(user);*/
+		return number;
+	}
+	
+	/**
+	 * 支付成功 给用户添加金豆(用户累加金豆数量)
+	 * @param rechargeId
+	 * @return
+	 * @throws Exception
+	 */
+	public String lshAppUserUpdate(String rechargeId) throws Exception {
+		// 根据金豆配置id查询配置信息
+		PageData bean = new PageData();
 		PageData user = new PageData();
 		user.put("USER_ID", user);
 		user = appuserService.findByUiId(user);
 		Integer  integration = Integer.parseInt(user.get("INTEGRATION").toString());
 		Integer  bean_number = Integer.parseInt(bean.get("BEAN_NUMBER").toString());
 		user.put("INTEGRATION", integration+bean_number);
-		appuserService.saveU(user);
-		return number;
-	}
+		appuserService.editU(user);
+		return "修改成功";
+	}	
 
 	/**
 	 * 支付成功后修改金豆充值记录
@@ -208,7 +227,7 @@ public class AppPayController extends BaseController {
 		PageData recharge = rechargeService.findById(pd);
 		recharge.put("STATUS", "1");
 		recharge.put("PAY_TIME", Tools.date2Str(new Date()));
-		rechargeService.save(recharge);
+		rechargeService.edit(recharge);
 		return "修改成功";
 	}
 	
@@ -225,7 +244,7 @@ public class AppPayController extends BaseController {
 		PageData purchase = agentpurchaseService.findById(pd);
 		purchase.put("STATUS", "1");
 		purchase.put("PAY_TIME", Tools.date2Str(new Date()));
-		agentpurchaseService.save(purchase);
+		agentpurchaseService.edit(purchase);
 		return "修改成功";
 	}
 	
