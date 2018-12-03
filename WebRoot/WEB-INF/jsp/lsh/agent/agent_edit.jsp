@@ -39,55 +39,56 @@
 										<tr>
 											<td
 												style="width: 75px; text-align: right; padding-top: 13px;">售价:</td>
-											<td><input type="number" name="PRICE" id="PRICE"
+											<td colspan="3"><input type="number" name="PRICE" id="PRICE"
 												value="${pd.PRICE}" maxlength="32" placeholder="这里输入售价"
-												title="售价" style="width: 98%;" /></td>
+												title="售价" style="width: 98%;" /></td>												
 										</tr>
-										<tr>
+									    <tr>
 											<td
 												style="width: 75px; text-align: right; padding-top: 13px;">标题:</td>
-											<td><input type="text" name="TITLE" id="TITLE"
+											<td colspan="3"><input type="text" name="TITLE" id="TITLE"
 												value="${pd.TITLE}" maxlength="20" placeholder="这里输入标题"
 												title="标题" style="width: 98%;" /></td>
-										</tr>
+										</tr> 
 										<tr>
 											<td
 												style="width: 75px; text-align: right; padding-top: 13px;">内容:</td>
-											<td><input type="text" name="ITEM_ONE" id="ITEM_ONE"
-												value="${pd.ITEM_ONE}" maxlength="21845"
-												placeholder="这里输入内容" title="内容" style="width: 98%;" /></td>
-										</tr>
-										<tr>
-											<td
-												style="width: 75px; text-align: right; padding-top: 13px;">内容:</td>
-											<td><input type="text" name="ITEM_TWO" id="ITEM_TWO"
-												value="${pd.ITEM_TWO}" maxlength="21845"
-												placeholder="这里输入内容" title="内容" style="width: 98%;" /></td>
-										</tr>
-										<tr>
-											<td
-												style="width: 75px; text-align: right; padding-top: 13px;">内容:</td>
-											<td><input type="text" name="ITEM_THREE" id="ITEM_THREE"
-												value="${pd.ITEM_THREE}" maxlength="21845"
-												placeholder="这里输入内容" title="内容" style="width: 98%;" /></td>
+											<td colspan="3">
+											<textarea rows="9" cols="45" name="ITEMS"  style="overflow-x:hidden">
+												<c:out value="${pd.ITEMS}"></c:out>
+											</textarea>
+											</td>
 										</tr>
 										<tr>
 											<td
 												style="width: 75px; text-align: right; padding-top: 13px;">状态:</td>
 											
-											<td><input style="margin-left: 1%;" type='radio'
-												id='STATUS' name='STATUS' value="0"
-												<c:if test="${pd.STATUS=='0'}">checked="checked"</c:if> />&nbsp;&nbsp;会员
+											<td style="width:119px;"><input style="margin-left: 1%;" type='radio'
+												id='STATUS1' name='STATUS' value="0"
+												<c:if test="${pd.STATUS=='0'}">checked="checked"</c:if> />&nbsp;&nbsp;<label for="STATUS1" style="cursor:pointer;">会员</label>
 											</td>
-											<td><input style="margin-left: 1%;" type='radio'
-												id='STATUS' name='STATUS' value="1"
-												<c:if test="${pd.STATUS=='1'}">checked="checked"</c:if> />&nbsp;&nbsp;经销商
+											<td style="width:119px;"><input style="margin-left: 1%" type='radio'
+												id='STATUS2' name='STATUS' value="1"
+												<c:if test="${pd.STATUS=='1'}">checked="checked"</c:if> />&nbsp;&nbsp;<label for="STATUS2" style="cursor:pointer;">经销商</label>
 											</td>
-											<td><input style="margin-left: 1%;" type='radio'
-												id='STATUS' name='STATUS' value="2"
-												<c:if test="${pd.STATUS=='2'}">checked="checked"</c:if> />&nbsp;&nbsp;企商VIP
+											<td style="width:119px;"><input style="margin-left: 1%;" type='radio'
+												id='STATUS3' name='STATUS' value="2"
+												<c:if test="${pd.STATUS=='2'}">checked="checked"</c:if> />&nbsp;&nbsp;<label for="STATUS3" style="cursor:pointer;">企商VIP</label>
 											</td>
 
+										</tr>
+										<tr>
+											<td
+												style="width: 75px; text-align: center; padding-top: 13px;" colspan="2">会员性质:</td>
+											
+											<td style="width:119px;"><span><input style="margin-left: 1%;" type='radio'
+												id='TERM1' name='TERM' value='永久会员'
+												<c:if test="${pd.TERM=='永久会员'}">checked="checked"</c:if> />&nbsp;&nbsp;<label for="TERM1" style="cursor:pointer;">永久会员</label></span>
+											</td>
+											<td style="width:119px;"><span><input style="margin-left: 1%;" type='radio'
+												id='TERM2' name='TERM' value='按年计费'
+												<c:if test="${pd.TERM=='按年计费'}">checked="checked"</c:if> />&nbsp;&nbsp;<label for="TERM2" style="cursor:pointer;">按年计费</label></span>
+											</td>
 										</tr>
 										<tr>
 											<td style="text-align: center;" colspan="10"><a
@@ -148,34 +149,14 @@
 				$("#TITLE").focus();
 				return false;
 			}
-			if ($("#ITEM_ONE").val() == "") {
-				$("#ITEM_ONE").tips({
+			if ($("#ITEMS").val() == "") {
+				$("#ITEMS").tips({
 					side : 3,
 					msg : '请输入内容',
 					bg : '#AE81FF',
 					time : 2
 				});
-				$("#ITEM_ONE").focus();
-				return false;
-			}
-			if ($("#ITEM_TWO").val() == "") {
-				$("#ITEM_TWO").tips({
-					side : 3,
-					msg : '请输入内容',
-					bg : '#AE81FF',
-					time : 2
-				});
-				$("#ITEM_TWO").focus();
-				return false;
-			}
-			if ($("#ITEM_THREE").val() == "") {
-				$("#ITEM_THREE").tips({
-					side : 3,
-					msg : '请输入内容',
-					bg : '#AE81FF',
-					time : 2
-				});
-				$("#ITEM_THREE").focus();
+				$("#ITEMS").focus();
 				return false;
 			}
 			if ($("#STATUS").val() == "") {
@@ -186,6 +167,26 @@
 					time : 2
 				});
 				$("#STATUS").focus();
+				return false;
+			}
+			if ($("#TERM1").val() == "") {
+				$("#TERM1").tips({
+					side : 3,
+					msg : '请选择会员性质（1.永久会员，2.按年计费）',
+					bg : '#AE81FF',
+					time : 2
+				});
+				$("#TERM1").focus();
+				return false;
+			}
+			if ($("#TERM2").val() == "") {
+				$("#TERM2").tips({
+					side : 3,
+					msg : '请选择会员性质（1.永久会员，2.按年计费）',
+					bg : '#AE81FF',
+					time : 2
+				});
+				$("#TERM2").focus();
 				return false;
 			}
 			$("#Form").submit();

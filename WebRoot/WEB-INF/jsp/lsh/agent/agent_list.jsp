@@ -88,9 +88,8 @@
 													id="zcheckbox" /><span class="lbl"></span></label></th>
 											<th class="center" style="width: 50px;">序号</th>
 											<th class="center">售价</th>
+											<th class="center">会员性质</th>
 											<th class="center">标题</th>
-											<th class="center">内容</th>
-											<th class="center">内容</th>
 											<th class="center">内容</th>
 											<th class="center">状态</th>
 											<th class="center">创建人</th>
@@ -113,20 +112,19 @@
 																	class="ace" /><span class="lbl"></span></label></td>
 															<td class='center' style="width: 30px;">${vs.index+1}</td>
 															<td class='center'>${var.PRICE}</td>
-															<td class='center'>${var.TITLE}</td>
-															<td class='center'>${var.ITEM_ONE}</td>
-															<td class='center'>${var.ITEM_TWO}</td>
-															<td class='center'>${var.ITEM_THREE}</td>
-															<td class='center'>
+															<td class='center'  style="width:90px">${var.TERM}</td>
+															<td class='center' style="width:90px">${var.TITLE}</td>
+															<td class='center'>${var.ITEMS}</td>
+															<td class='center' style="width:90px">
 																<c:if test="${var.STATUS == 0}">会员</c:if>
 																<c:if test="${var.STATUS == 1}">经销商</c:if>
 																<c:if test="${var.STATUS == 2}">企商VIP</c:if>
 															</td>
-															<td class='center'>${var.CREATE_USER}</td>
-															<td class='center'>${var.CREATE_TIME}</td>
-															<td class='center'>${var.UPDATE_USER}</td>
-															<td class='center'>${var.UPDATE_TIME}</td>
-															<td class="center"><c:if
+															<td class='center'  style="width:90px">${var.CREATE_USER}</td>
+															<td class='center'  style="width:90px">${var.CREATE_TIME}</td>
+															<td class='center'  style="width:90px">${var.UPDATE_TIME}</td>
+															<td class='center'  style="width:90px">${var.UPDATE_USER}</td>
+															<td class="center" style="width:90px"><c:if
 																	test="${QX.edit != 1 && QX.del != 1 }">
 																	<span
 																		class="label label-large label-grey arrowed-in-right arrowed-in"><i
@@ -308,7 +306,7 @@
 			 diag.Title ="新增";
 			 diag.URL = '<%=basePath%>agent/goAdd.do';
 			 diag.Width = 450;
-			 diag.Height = 355;
+			 diag.Height = 470;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮
@@ -347,7 +345,7 @@
 			 diag.Title ="编辑";
 			 diag.URL = '<%=basePath%>agent/goEdit.do?AGENT_ID='+Id;
 			 diag.Width = 450;
-			 diag.Height = 355;
+			 diag.Height = 470;
 			 diag.Modal = true;				//有无遮罩窗口
 			 diag. ShowMaxButton = true;	//最大化按钮
 		     diag.ShowMinButton = true;		//最小化按钮 

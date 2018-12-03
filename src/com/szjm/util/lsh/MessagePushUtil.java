@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.jpush.api.JPushClient;
 import org.apache.taglibs.standard.lang.jstl.Logger;
 
 import com.szjm.util.Jurisdiction;
 
 import cn.jiguang.common.resp.APIConnectionException;
 import cn.jiguang.common.resp.APIRequestException;
-import cn.jpush.api.JPushClient;
 import cn.jpush.api.push.PushResult;
 import cn.jpush.api.push.model.Message;
 import cn.jpush.api.push.model.Options;
@@ -47,7 +47,7 @@ public class MessagePushUtil {
 	                 //jpush的通知，android的由jpush直接下发，iOS的由apns服务器下发，Winphone的由mpns下发
 	                 .setNotification(Notification.newBuilder()
 	                         //指定当前推送的android通知
-	                         .addPlatformNotification(AndroidNotification.newBuilder()  
+	                         .addPlatformNotification(AndroidNotification.newBuilder()
 	                                 .setAlert(remark)
 	                                 .setTitle(title)
 	                                 //此字段为透传字段，不会显示在通知栏。用户可以通过此字段来做一些定制需求，如特定的key传要指定跳转的页面（value）
@@ -63,8 +63,8 @@ public class MessagePushUtil {
 	                                 // 如果系统没有此音频则以系统默认声音提醒；此字段如果传空字符串，iOS9及以上的系统是无声音提醒，以下的系统是默认声音
 	                                 .setSound("sound.caf")
 	                                 //取消此注释，消息推送时ios将无法在锁屏情况接收
-	                                 // .setContentAvailable(true)  
-	                                 .build())    
+	                                 // .setContentAvailable(true)
+	                                 .build())
 	                         .build())
 	                         .setOptions(Options.newBuilder()
 		                          //此字段的值是用来指定本推送要推送的apns环境，false表示开发，true表示生产；对android和自定义消息无意义
@@ -72,20 +72,20 @@ public class MessagePushUtil {
 		                          //此字段是给开发者自己给推送编号，方便推送者分辨推送记录
 		                          .setSendno(1)
 		                          //此字段的值是用来指定本推送的离线保存时长，如果不传此字段则默认保存一天，最多指定保留十天；
-		                          .setTimeToLive(86400)	   
-		                          .build())  
-	                 .build();	    	
+		                          .setTimeToLive(86400)
+		                          .build())
+	                 .build();
 		    }else{
 			    /*payload = PushPayload.newBuilder()
 			        .setPlatform(Platform.android_ios())//指定android平台的用户
 			        .setAudience(Audience.all())//你项目中的所有用户
 			        .setNotification(Notification.android(remark,title, map))
 			        .build();*/
-		    	
+
 		    	payload =  PushPayload.newBuilder()
 	                 .setPlatform(Platform.android_ios())
 	                 .setAudience(Audience.all())
-	                 .setNotification(Notification.newBuilder()	                         
+	                 .setNotification(Notification.newBuilder()
 	                         .addPlatformNotification(AndroidNotification.newBuilder()
 	                                 .setAlert(remark)//内容
 	                                 .setTitle(title)//标题
@@ -99,13 +99,13 @@ public class MessagePushUtil {
 	                                 .incrBadge(1)
 	                                 //此字段的值default表示系统默认声音；传sound.caf表示此推送以项目里面打包的sound.caf声音来提醒，
 	                                 // 如果系统没有此音频则以系统默认声音提醒；此字段如果传空字符串，iOS9及以上的系统是无声音提醒，以下的系统是默认声音
-	                                 .setSound("sound.caf")	                               
+	                                 .setSound("sound.caf")
 	                                 //此项说明此推送是一个background推送，想了解background看：http://docs.jpush.io/client/ios_tutorials/#ios-7-background-remote-notification
-	                                 // .setContentAvailable(true)	  
+	                                 // .setContentAvailable(true)
 	                                 .build()
 	                         )
 	                         .build())
-	                         
+
 	                         .setOptions(Options.newBuilder()
 		                          //此字段的值是用来指定本推送要推送的apns环境，false表示开发，true表示生产；对android和自定义消息无意义
 		                          .setApnsProduction(true)
@@ -113,13 +113,14 @@ public class MessagePushUtil {
 		                          .setSendno(1)
 		                          //此字段的值是用来指定本推送的离线保存时长，如果不传此字段则默认保存一天，最多指定保留十天；
 		                          .setTimeToLive(86400)
-		   
-		                          .build())    
+
+		                          .build())
 	                 .build();
 		    }
+		    //TODO 暂时注释
             PushResult pu = jpushClient.sendPush(payload);
-	        System.out.println(pu);
-	        System.out.println(payload);
+	       // System.out.println(pu);
+	        //System.out.println(payload);
 	    } catch (APIConnectionException e) {
 	    	return "1";
 	    } catch (APIRequestException e) {
