@@ -88,5 +88,13 @@ public class BeanRechargeService implements BeanRechargeManager{
 	return (List<PageData>)dao.findForList("BeanRechargeMapper.listAllByUserId", pd);
 	}
 	
+	/**根据充值编号获取数据
+	 * @param rechargeNumber 充值编号
+	 * @throws Exception
+	 */
+	public PageData findRechargeNumber(PageData rechargeNumber)throws Exception {
+		return (PageData) dao.findForObject("BeanRechargeMapper.findRechargeNumber", rechargeNumber);
+	}
+	
 }
 

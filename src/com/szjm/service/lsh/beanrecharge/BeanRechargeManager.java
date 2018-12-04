@@ -60,5 +60,11 @@ public interface BeanRechargeManager{
 	 */
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception;
 	
+	/**根据充值编号获取数据
+	 * @param rechargeNumber 充值编号
+	 * @throws Exception
+	 */
+	public PageData findRechargeNumber(PageData rechargeNumber)throws Exception;
+	
 }
 
