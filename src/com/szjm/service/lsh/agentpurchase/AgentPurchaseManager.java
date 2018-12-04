@@ -60,6 +60,11 @@ public interface AgentPurchaseManager{
 	 */
 	public void deleteAll(String[] ArrayDATA_IDS)throws Exception;
 	
+	/**根据购买编号获取数据
+	 * @param purchaseNumber 购买编号
+	 * @throws Exception
+	 */
+	public PageData findPurchaseNumber(PageData purchaseNumber)throws Exception;
 	
 }
 

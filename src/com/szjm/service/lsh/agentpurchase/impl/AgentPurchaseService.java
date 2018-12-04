@@ -88,5 +88,13 @@ public class AgentPurchaseService implements AgentPurchaseManager{
 		dao.delete("AgentPurchaseMapper.deleteAll", ArrayDATA_IDS);
 	}
 	
+	/**根据购买编号获取数据
+	 * @param purchaseNumber 购买编号
+	 * @throws Exception
+	 */
+	public PageData findPurchaseNumber(PageData purchaseNumber)throws Exception{
+		return (PageData) dao.findForObject("AgentPurchaseMapper.findPurchaseNumber", purchaseNumber);
+	}
+	
 }
 
