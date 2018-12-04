@@ -129,5 +129,14 @@
 		</foreach>
 	</delete>
 	
+	<!-- 根据购买编号获取数据 -->
+	<select id="findPurchaseNumber" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			PURCHASE_NUMBER = #{PURCHASE_NUMBER}
+	</select>
 	
 </mapper>
