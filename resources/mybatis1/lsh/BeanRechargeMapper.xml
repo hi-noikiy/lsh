@@ -130,5 +130,14 @@
 		</foreach>
 	</delete>
 	
+	<!-- 根据充值编号获取数据 -->
+	<select id="findRechargeNumber" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			RECHARGE_NUMBER = #{RECHARGE_NUMBER}
+	</select>
 	
 </mapper>
