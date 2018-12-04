@@ -59,10 +59,15 @@
 		update
 		<include refid="tableName"></include>
 		set 
-		TYPE = #{TYPE},
-		STATUS = #{STATUS},
-		PAY_TIME = #{PAY_TIME},
-		PURCHASE_ID = PURCHASE_ID
+		<if test="TYPE != null">
+			TYPE = #{TYPE},
+		</if>
+		<if test="AGENT_STATUS != null">
+			AGENT_STATUS = #{AGENT_STATUS},
+		</if>
+		<if test="PAY_TIME != null">
+			PAY_TIME = #{PAY_TIME}
+		</if>
 		where 
 		PURCHASE_ID = #{PURCHASE_ID}
 	</update>
