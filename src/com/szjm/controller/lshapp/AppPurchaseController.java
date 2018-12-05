@@ -14,6 +14,7 @@ import com.szjm.service.lsh.agent.AgentManager;
 import com.szjm.service.lsh.agentpurchase.AgentPurchaseManager;
 import com.szjm.service.lsh.bean.BeanManager;
 import com.szjm.service.lsh.beanrecharge.BeanRechargeManager;
+import com.szjm.service.lsh.lshuser.LshUserManager;
 import com.szjm.util.Jurisdiction;
 import com.szjm.util.PageData;
 
@@ -21,6 +22,9 @@ import com.szjm.util.PageData;
 @RequestMapping(value = "/lshapp/purchase")
 public class AppPurchaseController extends BaseController {
 
+	@Resource(name = "lshuserService")
+	private LshUserManager appuserService;// 用户
+	
 	@Resource(name = "beanService")
 	private BeanManager beanService;
 	@Resource(name = "beanrechargeService")
@@ -43,9 +47,13 @@ public class AppPurchaseController extends BaseController {
 		// //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
+		Integer user_id = Jurisdiction.getAppUserId();//获取当前用户id
+		pd.put("USER_ID", user_id);
+		PageData pdUser = appuserService.findById(pd);//查询用户资料
 		pd = this.getPageData();
 		List<PageData> varList = agentService.listAll(pd); // 列出Agent列表
 		mv.setViewName("lshapp/agent_list");
+		mv.addObject("pdUser", pdUser);
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		// mv.addObject("QX",Jurisdiction.getHC()); //按钮权限
@@ -88,6 +96,9 @@ public class AppPurchaseController extends BaseController {
 		// //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
+		Integer user_id = Jurisdiction.getAppUserId();//获取当前用户id
+		pd.put("USER_ID", user_id);
+		PageData pdUser = appuserService.findById(pd);//查询用户资料
 		pd = this.getPageData();
 		List<PageData> varList = beanService.listAll(pd); // 列出Bean列表
 		// 查询该用户是否存在充值信息
@@ -98,6 +109,7 @@ public class AppPurchaseController extends BaseController {
 			varList = varList.subList(0, 9);
 		}
 		mv.setViewName("lshapp/bean_list");
+		mv.addObject("pdUser", pdUser);
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
 		// mv.addObject("QX",Jurisdiction.getHC()); //按钮权限
