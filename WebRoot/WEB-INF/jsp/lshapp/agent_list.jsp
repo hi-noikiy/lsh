@@ -131,6 +131,9 @@
 		<script src="static/lshapp/js/fastclick2.js"></script>
 		<div class="contents">
 			<!-- <div class="fgheader"><a href="javascript:window.history.go(-1);"><img src="images/Return.png"></a>代理入口</div> -->
+			<div>
+				<input type="hidden" id="USER_ID" value="${pdUser.USER_ID}">
+			</div>
 			<ul class="clistUl">
 				<c:forEach items="${varList}" var="var" varStatus="vs">
 					<li>
@@ -163,14 +166,14 @@
 			//代理购买
 			function pay(e) {
 				debugger;
-				var agentId = e.id;
-				var userId = "1"; //用户id
+				var agentId = e.id;//代理ID
+				var userId = $('#USER_ID').val(); //用户id
 				//var agentStatus = "1"; //代理状态（0.会员，1.经销商，2.企商VIP）
 				var agentPrice = "0.01"; //购买金额
 				var type = "1"; //支付方式（0.微信，1.支付宝）
 				$.ajax({
 		        	type: "post",
-		        	url: '<%=basePath%>lshapp/pay/buyGold.do?token=92fc5f1ce68d4f42a68b85c0a1c2e353',
+		        	url: '<%=basePath%>lshapp/pay/buyGold.do',
 					data : {
 						agentId : agentId,
 						userId : userId,

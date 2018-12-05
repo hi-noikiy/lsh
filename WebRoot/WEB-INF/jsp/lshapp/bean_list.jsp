@@ -67,6 +67,9 @@
 		<script src="static/lshapp/js/fastclick2.js"></script>
 		<div class="contents">
 			<!--<div class="fgheader"><a href="javascript:window.history.go(-1);"><img src="images/Return.png"></a>充值</div>-->
+			<div>
+				<input type="hidden" id="USER_ID" value="${pdUser.USER_ID}">
+			</div>
 			<div class="radiobox">
 				<ul>
 					<c:forEach items="${varList}" var="var" varStatus="vs">
@@ -95,13 +98,13 @@
 			//金豆充值
 			function recharge(e) {
 				debugger;
-				var beanId = e.id;
-				var userId = "1"; //用户id
+				var beanId = e.id;//金豆id
+				var userId = $('#USER_ID').val(); //用户id
 				var type = "1";//支付方式（0.微信，1.支付宝）
 				var agentPrice = "0.01"; //充值金额
 				 $.ajax({
 		        	 type: "post",
-		        	 url: '<%=basePath%>lshapp/pay/buyGold.do?token=92fc5f1ce68d4f42a68b85c0a1c2e353',
+		        	 url: '<%=basePath%>lshapp/pay/buyGold.do',
 						data : {
 							beanId : beanId,
 							userId : userId,
