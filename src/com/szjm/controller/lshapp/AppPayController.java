@@ -260,19 +260,18 @@ public class AppPayController extends BaseController {
 					pd.put("PURCHASE_NUMBER", out_trade_no);//购买编号
 					PageData  lshAgentPurchase = agentpurchaseService.findPurchaseNumber(pd);
 					if(lshAgentPurchase != null) {//如果lshAgentPurchase不等于null进行购买代理支付 否则金豆充值支付
-						String purchaseId = "";
+						Integer user_id = Jurisdiction.getAppUserId();//获取当前用户id
 						//支付成功后调用修改的方法
-						purshaseUpdate(purchaseId);
+						purshaseUpdate(user_id+"");
 					}else if(lshAgentPurchase == null) {//金豆充值
 						pd.put("RECHARGE_NUMBER", out_trade_no);//充值编号
 						PageData lshBeanRecharge = rechargeService.findRechargeNumber(pd);
 						if(lshBeanRecharge != null) {
 							//支付成功后调用修改的方法(用户累加金豆数量)
-							String userId = "";
-							lshAppUserUpdate(userId);
+							Integer user_id = Jurisdiction.getAppUserId();//获取当前用户id
+							lshAppUserUpdate(user_id+"");
 							//支付成功后如果是金豆充值就调用以下方法
-							String rechargeId ="";
-							rechargeUpdate(rechargeId);
+							rechargeUpdate(user_id+"");
 						}
 					}
 				}
