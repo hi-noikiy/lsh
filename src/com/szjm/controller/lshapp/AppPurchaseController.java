@@ -67,14 +67,15 @@ public class AppPurchaseController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/agentPurchase")
-	public ModelAndView agentPurchase(HttpServletRequest request, String userId) throws Exception {
+	public ModelAndView agentPurchase(HttpServletRequest request/*, String userId*/) throws Exception {
 		// logBefore(logger, Jurisdiction.getUsername()+"列表Bean");
 		// if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
 		// //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
+		Integer user_id = Jurisdiction.getAppUserId();//获取当前用户id
+		pd.put("USER_ID", user_id);
 		pd = this.getPageData();
-		pd.put("USER_ID", userId);
 		List<PageData> varList = agentpurchaseService.listAllByUserId(pd);
 		mv.setViewName("lshapp/agent_purchase");
 		mv.addObject("varList", varList);
@@ -90,7 +91,7 @@ public class AppPurchaseController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/beanList")
-	public ModelAndView beanList(HttpServletRequest request, String userId) throws Exception {
+	public ModelAndView beanList(HttpServletRequest request/*, String userId*/) throws Exception {
 		// logBefore(logger, Jurisdiction.getUsername()+"列表Bean");
 		// if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
 		// //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
@@ -103,7 +104,7 @@ public class AppPurchaseController extends BaseController {
 		List<PageData> varList = beanService.listAll(pd); // 列出Bean列表
 		// 查询该用户是否存在充值信息
 		PageData recharge = new PageData();
-		recharge.put("USER_ID", userId);
+		recharge.put("USER_ID", user_id);
 		List<PageData> rechargeList = beanrechargeService.listAllByUserId(recharge);
 		if (rechargeList.size() > 0) {
 			varList = varList.subList(0, 9);
@@ -123,14 +124,15 @@ public class AppPurchaseController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/beanRecharge")
-	public ModelAndView beanRecharge(HttpServletRequest request, String userId) throws Exception {
+	public ModelAndView beanRecharge(HttpServletRequest request/*, String userId*/) throws Exception {
 		// logBefore(logger, Jurisdiction.getUsername()+"列表Bean");
 		// if(!Jurisdiction.buttonJurisdiction(menuUrl, "cha")){return null;}
 		// //校验权限(无权查看时页面会有提示,如果不注释掉这句代码就无法进入列表页面,所以根据情况是否加入本句代码)
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
+		Integer user_id = Jurisdiction.getAppUserId();//获取当前用户id
+		pd.put("USER_ID", user_id);
 		pd = this.getPageData();
-		pd.put("USER_ID", userId);
 		List<PageData> varList = beanrechargeService.listAllByUserId(pd);
 		mv.setViewName("lshapp/bean_recharge");
 		mv.addObject("varList", varList);
