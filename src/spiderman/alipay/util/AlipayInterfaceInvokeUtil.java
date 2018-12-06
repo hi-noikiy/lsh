@@ -82,6 +82,7 @@ public class AlipayInterfaceInvokeUtil {
 		}
 		return response.isSuccess();
 	}
+	
 	/**
 	 * 生成APP支付订单信息
 	 * @param body 对一笔交易的具体描述信息。如果是多种商品，请将商品描述字符串累加传给body。
@@ -115,6 +116,41 @@ public class AlipayInterfaceInvokeUtil {
 				return null;
 		}
 	}
+	
+	/**
+	 * 生成APP支付订单信息 (代理购买、金豆充值)
+	 * @param body 对一笔交易的具体描述信息。如果是多种商品，请将商品描述字符串累加传给body。
+	 * @param subject 商品的标题/交易标题/订单标题/订单关键字等。
+	 * @param outtradeno 商户网站唯一订单号
+	 * @param totalAmount 订单总金额，单位为元，精确到小数点后两位，取值范围[0.01,100000000]
+	 * @return APP支付所需要参数
+	 */
+	public static String AlipayTradeAppPayAgent(String body,String subject,String outtradeno,String totalAmount){
+		//实例化客户端
+		AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.URL, AlipayConfig.APPID, AlipayConfig.RSA_PRIVATE_KEY, "json", AlipayConfig.CHARSET, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.SIGNTYPE);
+		//实例化具体API对应的request类,类名称和接口名称对应,当前调用接口名称：alipay.trade.app.pay
+		AlipayTradeAppPayRequest request = new AlipayTradeAppPayRequest();
+		//SDK已经封装掉了公共参数，这里只需要传入业务参数。以下方法为sdk的model入参方式(model和biz_content同时存在的情况下取biz_content)。
+		AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
+		model.setBody(body);
+		model.setSubject(subject);
+		model.setOutTradeNo(outtradeno);
+		model.setTimeoutExpress("30m");
+		model.setTotalAmount(totalAmount);
+		model.setProductCode("QUICK_MSECURITY_PAY");
+		request.setBizModel(model);
+		request.setNotifyUrl(AlipayConfig.notify_d_url);
+		try {
+		        //这里和普通的接口调用不同，使用的是sdkExecute
+		        AlipayTradeAppPayResponse response = alipayClient.sdkExecute(request);
+		        System.out.println(response.getBody());//就是orderString 可以直接给客户端请求，无需再做处理。
+		        return response.getBody();
+		    } catch (AlipayApiException e) {
+		        e.printStackTrace();
+				return null;
+		}
+	}
+	
 	/**
 	 * 返回电脑网站支付表单
 	 * @param out_trade_no 商户订单号
