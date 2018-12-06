@@ -128,7 +128,8 @@ public class AppPayController extends BaseController {
 					"礼尚汇商品", "礼尚汇支付", out_order_id, real_pay);*/
 			String outtradeno = number;
 			//String totalAmount = "0.01";
-			String alipayMessge = AlipayInterfaceInvokeUtil.AlipayTradeAppPay(
+			//调用支付宝支付接口
+			String alipayMessge = AlipayInterfaceInvokeUtil.AlipayTradeAppPayAgent(
 					"礼尚汇商品", "礼尚汇支付", outtradeno, totalAmount);
 			aliResult.put("alipaymessge", alipayMessge
 					.replaceAll("\u003d", "=").replaceAll("\u0026", "&"));
