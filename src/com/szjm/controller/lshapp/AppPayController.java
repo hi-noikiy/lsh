@@ -200,15 +200,6 @@ public class AppPayController extends BaseController {
 		pd.put("CREATE_TIME", Tools.date2Str(new Date())); // 创建时间
 		pd.put("STATUS", "0");  //支付状态（0.未支付，1.已支付）
 		rechargeService.save(pd);
-		
-		//给用户添加金豆
-		/*PageData user = new PageData();
-		user.put("USER_ID", user);
-		user = appuserService.findByUiId(user);
-		Integer  integration = Integer.parseInt(user.get("INTEGRATION").toString());
-		Integer  bean_number = Integer.parseInt(bean.get("BEAN_NUMBER").toString());
-		user.put("INTEGRATION", integration+bean_number);
-		appuserService.saveU(user);*/
 		return number;
 	}
 
@@ -261,7 +252,7 @@ public class AppPayController extends BaseController {
 					PageData  lshAgentPurchase = agentpurchaseService.findPurchaseNumber(pd);
 					if(lshAgentPurchase != null) {//如果lshAgentPurchase不等于null进行购买代理支付 否则金豆充值支付
 						//支付成功后调用修改的方法
-						purshaseUpdate(lshAgentPurchase.get("PURCHASE_ID").toString());//获取代理购买id
+						purshaseUpdate(lshAgentPurchase.get("PURCHASE_ID").toString());//获取当前用户的代理购买id
 					}else if(lshAgentPurchase == null) {//金豆充值
 						pd.put("RECHARGE_NUMBER", out_trade_no);//充值编号
 						PageData lshBeanRecharge = rechargeService.findRechargeNumber(pd);
@@ -270,7 +261,7 @@ public class AppPayController extends BaseController {
 							Integer user_id = Jurisdiction.getAppUserId();//获取当前用户id
 							lshAppUserUpdate(user_id+"");
 							//支付成功后如果是金豆充值就调用以下方法
-							rechargeUpdate(lshBeanRecharge.get("RECHARGE_ID").toString());//获取金豆充值id
+							rechargeUpdate(lshBeanRecharge.get("RECHARGE_ID").toString());//获取当前用户的金豆充值id
 						}
 					}
 				}
@@ -331,5 +322,5 @@ public class AppPayController extends BaseController {
 		agentpurchaseService.edit(purchase);
 		return "修改成功";
 	}
-	
+
 }
