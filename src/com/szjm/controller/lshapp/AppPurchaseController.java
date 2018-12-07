@@ -14,13 +14,15 @@ import com.szjm.service.lsh.agent.AgentManager;
 import com.szjm.service.lsh.agentpurchase.AgentPurchaseManager;
 import com.szjm.service.lsh.bean.BeanManager;
 import com.szjm.service.lsh.beanrecharge.BeanRechargeManager;
+import com.szjm.service.lsh.lshuser.LshUserManager;
 import com.szjm.util.Jurisdiction;
 import com.szjm.util.PageData;
 
 @Controller
 @RequestMapping(value = "/lshapp/purchase")
 public class AppPurchaseController extends BaseController {
-
+	@Resource(name = "lshuserService")
+	private LshUserManager appuserService;// 用户
 	@Resource(name = "beanService")
 	private BeanManager beanService;
 	@Resource(name = "beanrechargeService")
@@ -32,7 +34,7 @@ public class AppPurchaseController extends BaseController {
 
 	/**
 	 * 代理配置列表
-	 * 
+	 *
 	 * @param page
 	 * @throws Exception
 	 */
@@ -51,10 +53,10 @@ public class AppPurchaseController extends BaseController {
 		// mv.addObject("QX",Jurisdiction.getHC()); //按钮权限
 		return mv;
 	}
-	
+
 	/**
 	 * 代理购买记录
-	 * 
+	 *
 	 * @param page
 	 * @throws Exception
 	 */
@@ -77,7 +79,7 @@ public class AppPurchaseController extends BaseController {
 
 	/**
 	 * 金币配置列表
-	 * 
+	 *
 	 * @param page
 	 * @throws Exception
 	 */
@@ -103,10 +105,10 @@ public class AppPurchaseController extends BaseController {
 		// mv.addObject("QX",Jurisdiction.getHC()); //按钮权限
 		return mv;
 	}
-	
+
 	/**
 	 * 根据用户id查询该用户的所有金豆充值信息列表
-	 * 
+	 *
 	 * @param page
 	 * @throws Exception
 	 */

@@ -45,54 +45,62 @@ import spiderman.wechat.util.SignUtil;
  */
 @RestController
 @RequestMapping(value = "/lshapp/pay")
-public class AppPayController extends BaseController {
+public class AppPayController extends BaseAppController {
 
 	public Logger log = (Logger) LoggerFactory.getLogger(AppPayController.class);
-	
+
 	@Resource(name = "agentpurchaseService")
 	private AgentPurchaseManager agentpurchaseService;
-	
+
 	@Resource(name = "beanrechargeService")
 	private BeanRechargeManager rechargeService;
-	
+
 	@Resource(name = "userService")
 	private UserManager userService;
-	
+
 	@Resource(name = "beanService")
 	private BeanManager beanService;
-	
+
 	@Resource(name = "agentService")
 	private AgentManager agentService;
-	
+
 	@Resource(name = "appuserService")
 	private AppuserManager appuserService;
-	
+
 	/**
 	 * 购买金豆
 	 * @param userId 用户id
 	 * @param agentId 代理配置id
 	 * @param agentStatus 代理状态（0.会员，1.经销商，2.企商VIP）
-	 * 
+	 *
 	 * @param beanId 金豆充值id
 	 * @param payment 支付方式（0.微信,1.支付宝）
 	 * @param totalAmount 支付金额
 	 * @throws Exception
 	 */
-	@Transactional
 	@RequestMapping(value = "/buyGold")
 	@ResponseBody
-	public Object buyGold(String userId, String agentId,String beanId, /*String agentStatus,*/
-			String payment, String totalAmount,String ipAddress) throws Exception {
+	public Object buyGold( String agentId,String beanId,
+			String payment, String totalAmount,HttpServletRequest request) throws Exception {
 		Map<String, Object> aliResult = new HashMap<String, Object>();
 		String number ="";
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		PageData agentPd = new PageData();
+		agentPd.put("AGENT_ID", agentPd);
+		agentPd=agentService.findById(agentPd);
+		PageData beanPd = new PageData();
+		beanPd.put("BEAN_ID", agentPd);
+		beanPd=beanService.findById(beanPd);
+		Integer user_id = Jurisdiction.getAppUserId(); // 当前用户ID
 		if (payment.equals("0")) {//微信支付
 			//微信
 			if (null != agentId && !agentId.equals("")) {
 				//代理购买
-				number = purchaseAdd(userId,  agentId,  /*agentStatus,*/ totalAmount, payment);
+				number = purchaseAdd(user_id+"",  agentId,  agentPd.getString("PRICE"), payment);
 			}else if (null != beanId && !beanId.equals("")) {
 				//金豆充值
-				number = rechargeAdd(userId,  beanId,  totalAmount, payment);
+				number = rechargeAdd(user_id+"",  beanId,  beanPd.getString("PRICE"), payment);
 			}
 			UnifiedOrderSend unifiedOrderSend = new UnifiedOrderSend();
 			// send.set
@@ -106,22 +114,22 @@ public class AppPayController extends BaseController {
 			}
 			//unifiedOrderSend.setTotal_fee(Integer.valueOf(fee));
 			unifiedOrderSend.setTotal_fee(1);
-			unifiedOrderSend.setSpbill_create_ip(ipAddress);
+			unifiedOrderSend.setSpbill_create_ip(request.getRemoteAddr());
 			unifiedOrderSend.setTrade_type("APP");
 			UnifiedOrderResult result = AppWechatInterfaceInvokeUtil
 					.unifiedOrder(unifiedOrderSend);
 			Map<String, Object> wxResult = SignUtil.signOrderResult4App(result);
 			wxResult.put("paytype", "wxpay");
 			wxResult.put("order_id", number);
-			
+
 		} else if(payment.equals("1")) {//支付宝支付
 			//支付宝
 			if (null != agentId && !agentId.equals("")) {
 				//代理购买
-				number = purchaseAdd(userId,  agentId, /*agentStatus,*/ totalAmount, payment);
+				number = purchaseAdd(user_id+"",  agentId, /*agentStatus,*/ agentPd.getString("PRICE"), payment);
 			}else if (null != beanId && !beanId.equals("")) {
 				//金豆充值
-				number = rechargeAdd(userId,  beanId,  totalAmount, payment);
+				number = rechargeAdd(user_id+"",  beanId,  beanPd.getString("PRICE"), payment);
 			}
 			aliResult.put("paytype", "alipay");
 			/*String alipayMessge = AlipayInterfaceInvokeUtil.AlipayTradeAppPay(
@@ -136,7 +144,34 @@ public class AppPayController extends BaseController {
 		}
 		return aliResult;
 	}
-	
+
+
+	/**
+	 *12月6号新增测试支付
+	 */
+	/*@RequestMapping(value = "/buyGoldTest")
+	@ResponseBody
+	public Object buyGoldTest(HttpServletRequest request) throws Exception {
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		Integer user_id = Jurisdiction.getAppUserId(); // 当前用户ID
+		String role = Jurisdiction.getAppUserRole(); // 当前用户角色
+		Map<String, Object> result;
+		try {
+			result = (Map<String, Object>) orderService.getPayInfo(String.format("%.2f", (content+ Double.parseDouble(orderPd.get("FREIGHT_AMOUNT").toString()) - discount)),
+					OUT_ORDER_ID + "", pd.get("payment").toString(),
+					request.getRemoteAddr(), orderId);
+			return WriteClientMessage("0", "成功", result);
+
+		} catch (Exception e) {
+			return WriteClientMessage("1", "失败", "");
+		}
+		return role;
+	}*/
+
+
+
+
 	/**
 	 * 新增代理购买记录
 	 * @param userId 用户id
@@ -172,7 +207,7 @@ public class AppPayController extends BaseController {
 
 	/**
 	 * 新增金豆充值记录
-	 * 
+	 *
 	 * @param userId 用户id
 	 * @param beanId 金豆充值id
 	 * @param payment 支付方式（0.微信,1.支付宝）
@@ -200,7 +235,7 @@ public class AppPayController extends BaseController {
 		pd.put("CREATE_TIME", Tools.date2Str(new Date())); // 创建时间
 		pd.put("STATUS", "0");  //支付状态（0.未支付，1.已支付）
 		rechargeService.save(pd);
-		
+
 		//给用户添加金豆
 		/*PageData user = new PageData();
 		user.put("USER_ID", user);
@@ -214,7 +249,7 @@ public class AppPayController extends BaseController {
 
 	/**
 	 * 支付宝回调地址
-	 * 
+	 *
 	 * @param request
 	 * @param httpResponse
 	 * @param session
@@ -260,19 +295,18 @@ public class AppPayController extends BaseController {
 					pd.put("PURCHASE_NUMBER", out_trade_no);//购买编号
 					PageData  lshAgentPurchase = agentpurchaseService.findPurchaseNumber(pd);
 					if(lshAgentPurchase != null) {//如果lshAgentPurchase不等于null进行购买代理支付 否则金豆充值支付
-						String purchaseId = "";
 						//支付成功后调用修改的方法
-						purshaseUpdate(purchaseId);
+						purshaseUpdate(lshAgentPurchase.get("PURCHASE_ID").toString());
 					}else if(lshAgentPurchase == null) {//金豆充值
 						pd.put("RECHARGE_NUMBER", out_trade_no);//充值编号
 						PageData lshBeanRecharge = rechargeService.findRechargeNumber(pd);
 						if(lshBeanRecharge != null) {
 							//支付成功后调用修改的方法(用户累加金豆数量)
-							String userId = "";
-							lshAppUserUpdate(userId);
+							Integer user_id = Jurisdiction.getAppUserId();//获取当前用户id
+							lshAppUserUpdate(user_id+"");
+
 							//支付成功后如果是金豆充值就调用以下方法
-							String rechargeId ="";
-							rechargeUpdate(rechargeId);
+							rechargeUpdate(lshBeanRecharge.get("RECHARGE_ID").toString());
 						}
 					}
 				}
@@ -282,7 +316,8 @@ public class AppPayController extends BaseController {
 			log.info("验证失败!");
 		}
 	}
-	
+
+
 	/**
 	 * 支付成功 给用户添加金豆(用户累加金豆数量)
 	 * @param userId 用户id
@@ -300,7 +335,7 @@ public class AppPayController extends BaseController {
 		user.put("INTEGRATION", integration+bean_number);
 		appuserService.editU(user);
 		return "修改成功";
-	}	
+	}
 
 	/**
 	 * 支付成功后修改金豆充值记录
@@ -317,7 +352,7 @@ public class AppPayController extends BaseController {
 		rechargeService.edit(recharge);
 		return "修改成功";
 	}
-	
+
 	/**
 	 * 支付成功后修改代理购买记录
 	 * @param purchaseId 代理购买id
@@ -333,9 +368,9 @@ public class AppPayController extends BaseController {
 		agentpurchaseService.edit(purchase);
 		return "修改成功";
 	}
-	
-	
-	
+
+
+
 	/**
 	 * 购买金豆
 	 * @param userId 用户id
@@ -349,7 +384,7 @@ public class AppPayController extends BaseController {
 	@RequestMapping(value = "/buyGift")
 	@ResponseBody
 	public Object pay(String userId, String agentId,String beanId, String payment, Double money,String ipAddress) throws Exception {
-		
+
 		Map<String, Object> aliResult = new HashMap<String, Object>();
 		String number ="";
 		if (payment.equals("0")) {
@@ -381,7 +416,7 @@ public class AppPayController extends BaseController {
 			Map<String, Object> wxResult = SignUtil.signOrderResult4App(result);
 			wxResult.put("paytype", "wxpay");
 			wxResult.put("order_id", number);
-			
+
 		} else if(payment.equals("1")) {
 			String type = "1";
 			//支付宝

@@ -21,11 +21,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import spiderman.alipay.util.AlipayInterfaceInvokeUtil;
 import spiderman.util.base.BaseUtil;
 import spiderman.util.base.KdniaoTrackQueryAPI;
+import spiderman.wechat.domain.param.UnifiedOrderSend;
+import spiderman.wechat.domain.result.UnifiedOrderResult;
+import spiderman.wechat.util.AppWechatInterfaceInvokeUtil;
+import spiderman.wechat.util.SignUtil;
 
 import com.szjm.service.lsh.address.AddressManager;
+import com.szjm.service.lsh.agent.AgentManager;
+import com.szjm.service.lsh.agentpurchase.AgentPurchaseManager;
 import com.szjm.service.lsh.awardrecord.AwardRecordManager;
+import com.szjm.service.lsh.bean.BeanManager;
+import com.szjm.service.lsh.beanrecharge.BeanRechargeManager;
 import com.szjm.service.lsh.cart.CartManager;
 import com.szjm.service.lsh.expresscompany.ExpressCompanyManager;
 import com.szjm.service.lsh.goods.GoodsManager;
@@ -34,6 +43,7 @@ import com.szjm.service.lsh.integrationrecord.IntegrationRecordManager;
 import com.szjm.service.lsh.lshuser.LshUserManager;
 import com.szjm.service.lsh.order.OrderManager;
 import com.szjm.service.lsh.sysconfig.SysConfigManager;
+import com.szjm.service.system.appuser.AppuserManager;
 import com.szjm.util.Jurisdiction;
 import com.szjm.util.PageData;
 import com.szjm.util.Tools;
@@ -73,10 +83,22 @@ public class AppOrderController extends BaseAppController {
 	// 礼豆明细
 	@Resource(name = "integrationrecordService")
 	private IntegrationRecordManager integrationrecordService;
+	@Resource(name = "beanService")
+	private BeanManager beanService;
 
+	@Resource(name = "agentService")
+	private AgentManager agentService;
+
+	@Resource(name = "appuserService")
+	private AppuserManager appuserService;
+	@Resource(name = "agentpurchaseService")
+	private AgentPurchaseManager agentpurchaseService;
+
+	@Resource(name = "beanrechargeService")
+	private BeanRechargeManager rechargeService;
 	/**
 	 * 订单提交界面
-	 * 
+	 *
 	 * @param pd
 	 * @throws Exception
 	 */
@@ -219,7 +241,7 @@ public class AppOrderController extends BaseAppController {
 //		}
 		PageData config = sysconfigService.findById(pd); // 当前系统参数
 		String free_shipping_amount = config.get("FREE_SHIPPING_AMOUNT").toString();//价钱大于多少时免邮
-		
+
 		if(content > Double.parseDouble(free_shipping_amount)){
 			pd.put("postage", 0);
 			pd.put("content", String.format("%.2f", content));
@@ -230,11 +252,11 @@ public class AppOrderController extends BaseAppController {
 			pd.put("real_pay_amount", String.format("%.2f",(content+Double.parseDouble(config.get("POSTAGE").toString())) - discount)); // 商品优惠价格
 		}
 		pd.put("goodsSize", carList.size()); // 商品数量
-		
+
 		pd.put("discount", String.format("%.2f", discount)); // 商品优惠价格
-		
-		
-		
+
+
+
 		mv.setViewName("lshapp/order_submit");
 		mv.addObject("pd", pd);
 		mv.addObject("address", address);// 默认地址
@@ -244,7 +266,7 @@ public class AppOrderController extends BaseAppController {
 
 	/**
 	 * 创建订单，返回支付信息，进行支付
-	 * 
+	 *
 	 * @param pd
 	 * @throws Exception
 	 */
@@ -325,7 +347,7 @@ public class AppOrderController extends BaseAppController {
 			orderPd.put("FREIGHT_AMOUNT", 0); // 邮费
 		} else {
 			orderPd.put("TOTAL_AMOUNT",content+ Double.parseDouble(config.get("POSTAGE").toString())); // 订单总金额(实付金额+邮费)
-			orderPd.put("FREIGHT_AMOUNT", Double.parseDouble(config.get("POSTAGE").toString())); 
+			orderPd.put("FREIGHT_AMOUNT", Double.parseDouble(config.get("POSTAGE").toString()));
 		}
 		orderPd.put("CREATE_DATE", Tools.date2Str(new Date())); // 创建日期
 		orderPd.put("CREATE_USER", userPd.get("NICK_NAME").toString()); // 创建人
@@ -422,7 +444,7 @@ public class AppOrderController extends BaseAppController {
 
 	/**
 	 * 订单支付失败继续支付
-	 * 
+	 *
 	 * @param pd
 	 * @throws Exception
 	 */
@@ -673,7 +695,7 @@ public class AppOrderController extends BaseAppController {
 
 	/**
 	 * 抽奖修改购物车参数
-	 * 
+	 *
 	 * @param binder
 	 */
 	@RequestMapping(value = "/update_cart")
@@ -697,7 +719,7 @@ public class AppOrderController extends BaseAppController {
 
 	/**
 	 * 取消订单
-	 * 
+	 *
 	 * @param binder
 	 */
 	@RequestMapping(value = "/cancel_order")
@@ -720,7 +742,7 @@ public class AppOrderController extends BaseAppController {
 
 	/**
 	 * 确认收货
-	 * 
+	 *
 	 * @param binder
 	 */
 	@RequestMapping(value = "/confirm_goods")
@@ -739,6 +761,153 @@ public class AppOrderController extends BaseAppController {
 		} else {
 			return "error";
 		}
+	}
+
+	/**
+	 * 测试
+	 * @param binder
+	 */
+	@RequestMapping(value = "/createOrderNew")
+	@ResponseBody
+	public Object createOrderNew(HttpServletRequest request,String agentId,String beanId,
+			String payment) throws Exception {
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		Integer user_id = Jurisdiction.getAppUserId(); // 当前用户ID
+		Map<String, Object> aliResult = new HashMap<String, Object>();
+		String df = new SimpleDateFormat("yyyy").format(new Date());
+		String number = df + (new Date()).getTime();
+		PageData agentPd = new PageData();
+		PageData beanPd = new PageData();
+		System.out.println("进入购买礼豆了");
+		String money="";
+		if(agentId!=null&&!"".equals(agentId)){
+			System.out.println("进入购买礼豆了"+agentId);
+			agentPd.put("AGENT_ID", agentId);
+			agentPd=agentService.findById(agentPd);
+			money=agentPd.get("PRICE").toString();
+		}else{
+			System.out.println("进入购买礼豆了"+beanId);
+			beanPd.put("BEAN_ID", beanId);
+			beanPd=beanService.findById(beanPd);
+			money=beanPd.get("PRICE").toString();
+			System.out.println("money"+money);
+		}
+		//Map<String, Object> result;
+		if ("0".equals(payment)) {//微信支付
+			//微信
+			if (null != agentId && !agentId.equals("")) {
+				//代理购买
+				purchaseAdd(user_id+"",  agentId, money, payment);
+			}else if (null != beanId && !beanId.equals("")) {
+				//金豆充值
+				rechargeAdd(user_id+"",  beanId,  money, payment);
+			}
+			UnifiedOrderSend unifiedOrderSend = new UnifiedOrderSend();
+			// send.set
+			unifiedOrderSend.setBody("礼尚汇商品");
+			unifiedOrderSend.setOut_trade_no(number);
+			//Double realPay = Double.valueOf(agentPd.getString("PRICE")) * 100;
+			Double realPay = Double.valueOf(money) * 100;
+			String real_pay = realPay.toString();
+			String fee = real_pay;
+			if (fee.contains(".")) {
+				fee = fee.substring(0, fee.indexOf("."));
+			}
+			//unifiedOrderSend.setTotal_fee(Integer.valueOf(fee));
+			unifiedOrderSend.setTotal_fee(Integer.valueOf(fee));
+			unifiedOrderSend.setSpbill_create_ip(request.getRemoteAddr());
+			unifiedOrderSend.setTrade_type("APP");
+			UnifiedOrderResult result = AppWechatInterfaceInvokeUtil
+					.unifiedOrder(unifiedOrderSend);
+			Map<String, Object> wxResult = SignUtil.signOrderResult4App(result);
+			wxResult.put("paytype", "wxpay");
+			wxResult.put("order_id", number);
+			aliResult=wxResult;
+			System.out.println(aliResult);
+		} else if("1".equals(payment)) {//支付宝支付
+			//支付宝
+			if (null != agentId && !"".equals(agentId)) {
+				//代理购买
+				purchaseAdd(user_id+"",  agentId, /*agentStatus,*/ money, payment);
+			}else if (null != beanId && !"".equals(beanId)) {
+				//金豆充值
+				rechargeAdd(user_id+"",  beanId, money, payment);
+			}
+			aliResult.put("paytype", "alipay");
+			/*String alipayMessge = AlipayInterfaceInvokeUtil.AlipayTradeAppPay(
+					"礼尚汇商品", "礼尚汇支付", out_order_id, real_pay);*/
+			String outtradeno = number;
+			//String totalAmount = "0.01";
+			String alipayMessge = AlipayInterfaceInvokeUtil.AlipayTradeAppPay(
+					"礼尚汇商品", "礼尚汇支付", outtradeno, money);
+			aliResult.put("alipaymessge", alipayMessge
+					.replaceAll("\u003d", "=").replaceAll("\u0026", "&"));
+			aliResult.put("order_id", number);
+		}
+		return WriteClientMessage("0", "成功", aliResult);
+	}
+	public String purchaseAdd(String userId, String agentId, /*String agentStatus,*/String totalAmount,String payment) throws Exception {
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.put("PURCHASE_ID", this.get32UUID()); // 主键
+		String df = new SimpleDateFormat("yyyy").format(new Date());
+		String number = df + (new Date()).getTime();
+		pd.put("PURCHASE_NUMBER", number); // 代理购买编号
+		pd.put("USER_ID", userId); // 用户id
+		pd.put("AGENT_ID", agentId); // 代理配置id
+		// 根据代理配置id查询代理信息
+		PageData agent = new PageData();
+		agent.put("AGENT_ID", agentId);
+		agent = agentService.findById(agent);
+		pd.put("AGENT_STATUS", agent.get("STATUS")); // 代理状态（0.会员，1.经销商，2.企商VIP）
+		//pd.put("AGENT_STATUS", agentStatus); // 代理状态（0.会员，1.经销商，2.企商VIP）
+		pd.put("AGENT_PRICE", totalAmount); // 支付金额
+		pd.put("TYPE", payment); // 支付方式（0.微信，1.支付宝）
+		pd.put("CREATE_TIME", Tools.date2Str(new Date())); // 创建时间
+		pd.put("STATUS", "0"); // 支付状态（0.未支付，1.已支付）
+		agentpurchaseService.save(pd);
+		return number;
+	}
+
+	/**
+	 * 新增金豆充值记录
+	 *
+	 * @param userId 用户id
+	 * @param beanId 金豆充值id
+	 * @param payment 支付方式（0.微信,1.支付宝）
+	 * @param totalAmount 支付金额
+	 * @throws Exception
+	 */
+	public String rechargeAdd(String userId, String beanId, String totalAmount,String payment) throws Exception {
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.put("RECHARGE_ID", this.get32UUID()); // 主键
+		String df = new SimpleDateFormat("yyyy").format(new Date());
+		String number = df + (new Date()).getTime();
+		pd.put("RECHARGE_NUMBER", number); // 充值编号
+		pd.put("USER_ID", userId); // 用户id
+		pd.put("BEAN_ID", beanId); // 金豆配置id
+		// 根据金豆配置id查询配置信息
+		PageData bean = new PageData();
+		bean.put("BEAN_ID", beanId);
+		bean = beanService.findById(bean);
+		pd.put("BEAN_NUMBER", bean.get("BEAN_NUMBER")); // 充值数量
+		pd.put("BEAN_PRICE", totalAmount); // 支付金额
+		pd.put("TYPE", payment); // 支付方式
+		pd.put("CREATE_TIME", Tools.date2Str(new Date())); // 创建时间
+		pd.put("STATUS", "0");  //支付状态（0.未支付，1.已支付）
+		rechargeService.save(pd);
+
+		//给用户添加金豆
+		/*PageData user = new PageData();
+		user.put("USER_ID", user);
+		user = appuserService.findByUiId(user);
+		Integer  integration = Integer.parseInt(user.get("INTEGRATION").toString());
+		Integer  bean_number = Integer.parseInt(bean.get("BEAN_NUMBER").toString());
+		user.put("INTEGRATION", integration+bean_number);
+		appuserService.saveU(user);*/
+		return number;
 	}
 
 	@InitBinder

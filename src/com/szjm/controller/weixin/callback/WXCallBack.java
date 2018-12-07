@@ -21,10 +21,14 @@ import spiderman.wechat.util.SignUtil;
 
 import com.alipay.api.internal.util.AlipaySignature;
 import com.szjm.controller.base.BaseController;
+import com.szjm.service.lsh.agent.AgentManager;
+import com.szjm.service.lsh.agentpurchase.AgentPurchaseManager;
+import com.szjm.service.lsh.beanrecharge.BeanRechargeManager;
 import com.szjm.service.lsh.finance.FinanceManager;
 import com.szjm.service.lsh.lshuser.LshUserManager;
 import com.szjm.service.lsh.order.OrderManager;
 import com.szjm.service.lsh.sysconfig.SysConfigManager;
+import com.szjm.util.PageData;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 /**
@@ -43,7 +47,12 @@ public class WXCallBack extends BaseController {
 	private FinanceManager financeService;
 	@Resource(name="orderService")
 	private OrderManager orderService;
-
+	@Resource(name = "beanrechargeService")
+	private BeanRechargeManager beanrechargeService;
+	@Resource(name = "agentService")
+	private AgentManager agentService;
+	@Resource(name = "agentpurchaseService")
+	private AgentPurchaseManager agentpurchaseService;
 	@RequestMapping(value="/callback")
 	public void callback(HttpServletRequest request,HttpServletResponse response){
 		try {
@@ -60,7 +69,24 @@ public class WXCallBack extends BaseController {
 				System.out.println("验证成功");
 				synchronized (receive.getOut_trade_no().intern()) {
 					if("SUCCESS".equals(receive.getReturn_code())&&"SUCCESS".equals(receive.getResult_code())){
-						orderService.finishOrder(receive.getOut_trade_no());
+
+						//先用微信回调返回的支付编号，在订单表、礼豆充值表、礼包购买记录表中查询。修改对应记录的状态
+						PageData pd1 = new PageData();
+						pd1.put("PURCHASE_NUMBER", receive.getOut_trade_no());
+						PageData agentpd=	agentpurchaseService.findById(pd1);
+						PageData pd2 = new PageData();
+						pd2.put("RECHARGE_NUMBER", receive.getOut_trade_no());
+						PageData beanpd=beanrechargeService.findById(pd2);
+						if(agentpd!=null){
+							agentpd.put("STATUS", 1);
+							agentpurchaseService.edit(agentpd);
+						}else if(beanpd!=null){
+							beanpd.put("STATUS", 1);
+							beanrechargeService.edit(beanpd);
+						}else{
+							orderService.finishOrder(receive.getOut_trade_no());
+						}
+
 					}else if("FAIL".equals(receive.getReturn_code())){
 
 					}
