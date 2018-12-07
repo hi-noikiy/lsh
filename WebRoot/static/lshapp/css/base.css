@@ -390,7 +390,7 @@ body{
     width: 100%;
     text-align: center;
     padding: .12rem 0;
-    background: #55b837;
+    background: #e94e49;
     border-radius: 4px;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -809,8 +809,8 @@ table tr td {
     margin: 0 auto;
     text-align: center;
     padding: .12rem 0;
-    border: 1px solid #55b837;
-    color: #55b837;
+    border: 1px solid #e94e49;
+    color: #e94e49;
     border-radius: 4px;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -823,7 +823,7 @@ table tr td {
 }
 .bgColor{
     color: #fff !important;
-    background-color: #55b837;
+    background-color: #e94e49;
 }
 .successbox{
     position: fixed;
