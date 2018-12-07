@@ -81,7 +81,28 @@
 				white-space: nowrap;
 				font-size: 14px;
 			}
-
+         input[type="radio"] + label::before {
+			content: "\a0"; /*不换行空格*/
+			display: inline-block;
+			vertical-align: middle;
+			font-size: 16px;
+			width: 1em;
+			height: 1em;
+			margin-right: .4em;
+			border-radius: 50%;
+			border: 1px solid #01cd78;
+			text-indent: .15em;
+			line-height: 1;
+        }
+        input[type="radio"]:checked + label::before {
+			background-color: #01cd78;
+			background-clip: content-box;
+			padding: .27em;
+		}
+		input[type="radio"] {
+			position: absolute;
+			clip: rect(0, 0, 0, 0);
+		}
 			.clistUl, .clistUl li {
 				width: 100%;
 				overflow: hidden;
@@ -223,11 +244,12 @@
 								<p class='talmoney'></p >
 							</li>
 						    <li><img src="static/lshapp/images/payment_icon_Alipay.png"> <span>支付宝支付</span>
-								<input class="paystyle1" type="radio" name="payradio" id="1" value="1" checked></li>
-							<li style="border-bottom: 1px solid #eee;"><img
-								src="static/lshapp/images/payment_icon_WeChat.png"> <span>微信支付</span>
-								<!-- <input class="paystyle2" type="radio" name="payradio" id="2" disabled> -->
-								<input class="paystyle2" type="radio" name="payradio" id="2" value="0" ></li>
+								<input type="radio" name="SEX" id="sex" value="1" checked="checked" style="right: -1px;" /> <label for="sex" style="margin-left: 193px;"></label>
+							</li>
+							<li style="border-bottom: 1px solid #eee;">
+							<img src="static/lshapp/images/payment_icon_WeChat.png"> <span>微信支付</span>
+                                <input type="radio" id="sexs" name="SEX" value="0" style="margin-left: 50px;"/> <label for="sexs" style="margin-left: 209px;"></label>
+							</li>
 						</ul>
 					</div>
 					<div class="mpaybox nextstep" style="margin: 42px auto;"
