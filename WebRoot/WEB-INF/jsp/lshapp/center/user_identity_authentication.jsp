@@ -91,15 +91,16 @@
 				<span>营业执照：</span>
 				<div class="s-user-top" style="background:#fff;margin-bottom:0.8rem;">
 					<div class="user_profile_box p-r">
-						<div class="dis-box t-goods1 onelist-hidden jian-top"  style="padding-top:2.5rem;padding-bottom:2.0rem;padding-left:40%;">
+						<div class="dis-box t-goods1 onelist-hidden jian-top"  style="padding-top:1.5rem;margin-top: 2.3rem;padding-bottom:2.0rem;padding-left:10%;">
 							<div class="user-img " style="width: 7.5rem;height: 7.5rem;" onclick="upFileBusinessLicense()">
-								<div class="user-head-img-box-1" style="width: 7.5rem;height: 7.5rem;border-radius: 4.5rem;">
+								<div class="user-head-img-box-1" style="width: 6.5rem;height: 9.5rem;border-radius: 4.5rem;">
 								<c:if test="${pd.BUSINESS_LICENSE != null}"><img style="width: 7.5rem;height: 7.5rem;" id="imgBL" src="<%=basePath%>uploadFiles/uploadImgs/${pd.BUSINESS_LICENSE}"></c:if>
-								<c:if test="${pd.BUSINESS_LICENSE == null}"><img id="imgBL" src="static/lshapp/images/logo.png"></c:if>
+								<c:if test="${pd.BUSINESS_LICENSE == null}">
+									<img id="imgBL" src="static/lshapp/images/business_license.png"></c:if>
 								</div>
 							</div>
 						</div>
-						<div style="font-size: 1.7rem;color:#ABABAB;text-align:center;padding-top:0.1rem;" >点击更换营业执照</div>
+						<!-- <div style="font-size: 1.7rem;color:#ABABAB;text-align:center;padding-top:0.1rem;" >点击更换营业执照</div> -->
 						<input id="BUSINESS_LICENSE" name="BUSINESS_LICENSE" type="hidden"/>
 					</div>
 				</div>
@@ -109,15 +110,15 @@
 				<span>身份证：</span>
 				<div class="s-user-top" style="background:#fff;margin-bottom:0.8rem;">
 					<div class="user_profile_box p-r">
-						<div class="dis-box t-goods1 onelist-hidden jian-top"  style="padding-top:2.5rem;padding-bottom:2.0rem;padding-left:40%;">
-							<div class="user-img " style="width: 7.5rem;height: 7.5rem;" onclick="upFileIdentityCard()">
-								<div class="user-head-img-box-1" style="width: 7.5rem;height: 7.5rem;border-radius: 4.5rem;">
-								<c:if test="${pd.IDENTITY_CARD != null}"><img style="width: 7.5rem;height: 7.5rem;" id="imgIC" src="<%=basePath%>uploadFiles/uploadImgs/${pd.IDENTITY_CARD}"></c:if>
-								<c:if test="${pd.IDENTITY_CARD == null}"><img id="imgIC" src="static/lshapp/images/logo.png"></c:if>
+						<div class="dis-box t-goods1 onelist-hidden jian-top"  style="padding-top:1.5rem;margin-top: 2.3rem;padding-bottom:0.2rem;padding-left:10%;">
+							<div class="user-img " style="width: 13.5rem;height: 7.5rem;" onclick="upFileIdentityCard()">
+								<div class="user-head-img-box-1" style="width: 13.5rem;height: 7.5rem;border-radius: 4.5rem;">
+									<c:if test="${pd.IDENTITY_CARD != null}"><img style="width: 7.5rem;height: 7.5rem;" id="imgIC" src="<%=basePath%>uploadFiles/uploadImgs/${pd.IDENTITY_CARD}"></c:if>
+									<c:if test="${pd.IDENTITY_CARD == null}"><img id="imgIC" src="static/lshapp/images/identity_card.png"></c:if>
 								</div>
 							</div>
 						</div>
-						<div style="font-size: 1.7rem;color:#ABABAB;text-align:center;padding-top:0.1rem;" >点击更换头像</div>
+						<div style="font-size: 1.3rem;color:#ABABAB;text-align:center;padding-top:0.1rem;margin-left: -45%;" >身份证人像一面即可</div>
 						<input id="IDENTITY_CARD" name="IDENTITY_CARD" type="hidden"/>
 					</div>
 				</div>
@@ -127,13 +128,13 @@
 				</div>	 -->
 			</div>
 			
-			<div class="z_mask">
-		         <!--弹出框-->
+			<!-- <div class="z_mask">
+		         弹出框
 		         <div class="z_alert">
 		             <p ><img src="static/lshapp/images/jiazais.gif"/></p>
 		             <p style="color: white;padding-top: 5px;">图片加载中</p>
 		         </div>
-		     </div>
+		     </div> -->
 		</div>
 		
 		<!-- 营业执照 -->
