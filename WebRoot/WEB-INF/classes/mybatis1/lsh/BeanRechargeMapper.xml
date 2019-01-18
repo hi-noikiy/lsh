@@ -59,10 +59,15 @@
 		update
 		<include refid="tableName"></include>
 		set 
-		TYPE = #{TYPE},
-		STATUS = #{STATUS},
-		PAY_TIME = #{PAY_TIME},
-		RECHARGE_ID = RECHARGE_ID
+		<if test="TYPE != null">
+			TYPE = #{TYPE},
+		</if>
+		<if test="STATUS != null">
+			STATUS = #{STATUS},
+		</if>
+		<if test="PAY_TIME != null">
+			PAY_TIME = #{PAY_TIME}
+		</if>
 		where 
 		RECHARGE_ID = #{RECHARGE_ID}
 	</update>
@@ -125,5 +130,14 @@
 		</foreach>
 	</delete>
 	
+	<!-- 根据充值编号获取数据 -->
+	<select id="findRechargeNumber" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			RECHARGE_NUMBER = #{RECHARGE_NUMBER}
+	</select>
 	
 </mapper>

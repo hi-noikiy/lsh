@@ -179,12 +179,13 @@
         }
         ///新增地址
         function goAdd(){
-       		var type = $("#type").val();
+       		 <%-- var type = $("#type").val();
         	if(type!=""){ // 订单选择新增地址
         		window.location.replace("<%=basePath%>lshapp/userCenter/add_user_address.do?type="+type);
         	}else{ // 个人中心新增地址
         		window.location.replace("<%=basePath%>lshapp/userCenter/add_user_address.do");
-        	}
+        	}  --%>
+        	window.location.replace("<%=basePath%>lshapp/purchase/beanList.do");
         }
         // 去修改地址
         function goEdit(Id){

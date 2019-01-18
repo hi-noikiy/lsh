@@ -63,10 +63,9 @@
 		set 
 			PRICE = #{PRICE},
 			TITLE = #{TITLE},
-			ITEM_ONE = #{ITEM_ONE},
-			ITEM_TWO = #{ITEM_TWO},
-			ITEM_THREE = #{ITEM_THREE},
+			ITEMS = #{ITEMS},
 			STATUS = #{STATUS},
+			TERM = #{TERM},
 			UPDATE_USER = #{UPDATE_USER},
 			UPDATE_TIME = #{UPDATE_TIME},
 		AGENT_ID = AGENT_ID

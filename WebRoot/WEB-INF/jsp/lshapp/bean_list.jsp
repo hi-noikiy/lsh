@@ -128,9 +128,10 @@
 					</c:forEach>
 				</ul>
 			</div>
-			<div class="logibtn">
+			<!-- <div class="logibtn">
 				<span onclick="recharge(this)">充值</span>
-			</div>
+			</div> -->
+			<div class="mpaybox nextstep" style="margin: 42px auto;"onclick="recharge(this)">充值</div>
 		</div>
 	    <div id="zhezao" class="zhc" style="display: none;"></div>
 		 <!-- <div class="zhidao" id="fasnhu" style="display: none;background-color: white; position:fixed;width: 100%;bottom:0.1px;">

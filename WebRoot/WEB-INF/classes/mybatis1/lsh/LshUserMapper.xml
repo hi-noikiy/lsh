@@ -38,7 +38,10 @@
 		ADVANCE_DATE_COUNT,
 		TOKEN,
 		OPENID,
-		ALIPAYNAME
+		ALIPAYNAM,
+		BUSINESS_LICENSE,
+		IDENTITY_CARD,
+		REVIEW
 	</sql>
 	<!-- 带别名字段 -->
 	<sql id="FieldWithAlias">
@@ -71,7 +74,10 @@
 		o.ADVANCE_DATE_COUNT,
 		o.TOKEN,
 		o.OPENID,
-		o.ALIPAYNAME
+		o.ALIPAYNAME,
+		o.BUSINESS_LICENSE,
+		o.IDENTITY_CARD,
+		o.REVIEW
 	</sql>
 
 	<!-- 字段值 -->
@@ -105,8 +111,10 @@
 		#{ADVANCE_DATE_COUNT},
 		#{TOKEN},
 		#{OPENID},
-		#{ALIPAYNAME}
-
+		#{ALIPAYNAME},
+		#{BUSINESS_LICENSE},
+		#{IDENTITY_CARD},
+		#{REVIEW}
 	</sql>
 
 	<!-- 新增-->
@@ -217,6 +225,16 @@
 			</if>
 			<if test="OPENID!=null and OPENID!=''">
 			OPENID = #{OPENID},
+			</if>
+
+			<if test="BUSINESS_LICENSE!=null and BUSINESS_LICENSE!=''">
+			BUSINESS_LICENSE = #{BUSINESS_LICENSE},
+			</if>
+			<if test="IDENTITY_CARD!=null and IDENTITY_CARD!=''">
+			IDENTITY_CARD = #{IDENTITY_CARD},
+			</if>
+			<if test="REVIEW!=null and REVIEW!=''">
+			REVIEW = #{REVIEW},
 			</if>
 			USER_ID=USER_ID
 		where
@@ -475,21 +493,21 @@
 		update
 		<include refid="tableName"></include>
 		set
-		ROLE = #{ROLE}		
+		ROLE = #{ROLE}
 		where
 			USER_ID = #{USER_ID}
 	</update>
-	
-	
+
+
 	<!-- 清空最近合伙人 -->
 	<update id="editPartner" parameterType="pd">
 		update
 		<include refid="tableName"></include>
 		set
-		PARTNER_USER_ID = null		
+		PARTNER_USER_ID = null
 		where
 			PARTNER_USER_ID = #{USER_ID}
 	</update>
-	
+
 
 </mapper>

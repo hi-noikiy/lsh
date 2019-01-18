@@ -26,7 +26,14 @@
 		END_TIME,
 		YEARS,
 		EMAIL,
-		NUMBER
+		NUMBER,
+		GOLD_BEANS,	
+		CAKE_TICKET,
+		GIFT_BEANS,
+		INVITE_COUNT,
+		INVITE_VIP_COUNT,
+		INVITE_JXS_COUNT	
+		
 	</sql>
 	
 	<!-- 字段值 -->
@@ -47,7 +54,13 @@
 		#{END_TIME},
 		#{YEARS},
 		#{EMAIL},
-		#{NUMBER}	
+		#{NUMBER}
+		#{GOLD_BEANS},	
+		#{CAKE_TICKET},
+		#{GIFT_BEANS},
+		#{INVITE_COUNT},
+		#{INVITE_VIP_COUNT},
+		#{INVITE_JXS_COUNT}		
 	</sql>
 	
 	<!-- 角色表 -->
@@ -175,6 +188,18 @@
 			STATUS 					= #{STATUS},
 			EMAIL					= #{EMAIL},
 			NUMBER 					= #{NUMBER}
+			GOLD_BEANS				= #{GOLD_BEANS},	
+			CAKE_TICKET				= #{CAKE_TICKET},
+			GIFT_BEANS				= #{GIFT_BEANS}	
+			<if test="INVITE_COUNT != null">
+			INVITE_COUNT            = #{INVITE_COUNT},
+			</if>
+			<if test="INVITE_VIP_COUNT != null">
+			INVITE_VIP_COUNT        = #{INVITE_VIP_COUNT},
+			</if>
+			<if test="INVITE_JXS_COUNT != null">
+			INVITE_JXS_COUNT        = #{INVITE_JXS_COUNT}	
+			</if>	
 		<if test="PASSWORD != null and PASSWORD != ''">
 			,PASSWORD				= #{PASSWORD}
 		</if>

@@ -46,10 +46,16 @@ public class AppPurchaseController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
+
+		Integer user_id = Jurisdiction.getAppUserId();//获取当前用户id
+		pd.put("USER_ID", user_id);
+		PageData pdUser = appuserService.findById(pd);
+
 		List<PageData> varList = agentService.listAll(pd); // 列出Agent列表
 		mv.setViewName("lshapp/agent_list");
 		mv.addObject("varList", varList);
 		mv.addObject("pd", pd);
+		mv.addObject("pdUser", pdUser);
 		// mv.addObject("QX",Jurisdiction.getHC()); //按钮权限
 		return mv;
 	}

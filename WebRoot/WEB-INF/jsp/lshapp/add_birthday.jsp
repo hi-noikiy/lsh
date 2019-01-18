@@ -71,7 +71,7 @@
     	.layermmain{display:table;font-family:Helvetica,arial,sans-serif;pointer-events:none}
     	.layermmain .section{display:table-cell;vertical-align:middle;text-align:center}
     	.layermcont{padding:20px 15px;line-height:22px;border-radius:5px}
-    
+
 		.inlin{
 			display:inline-block;
 		}
@@ -160,7 +160,7 @@
         .btn_title{
 
         }
-        
+
          .z_mask {
             width: 100%;
             height: 100%;
@@ -181,7 +181,7 @@
             top: 50%;
             margin-top: -5rem;
         }
-        
+
 	</style>
 </head>
 <body style="background:#fff;">
@@ -229,8 +229,8 @@
 			<h3 style="width: 60px;font-size: 16px;margin-top: 1px;">生日</h3>
 
 			 <input style="border: 0;font-size:1.4rem;width: 280px" type="text" placeholder="请选择生日" class="input" id="SHENGRI" name="SHENGRI" readonly="readonly" onclick="showDates();">
-			 <input type="hidden" id="SOLAR_BIRTHDAY" name="SOLAR_BIRTHDAY" value=""> 
-			 <input type="hidden" id="LUNAR_CALENDAR" name="LUNAR_CALENDAR" value=""> 
+			 <input type="hidden" id="SOLAR_BIRTHDAY" name="SOLAR_BIRTHDAY" value="">
+			 <input type="hidden" id="LUNAR_CALENDAR" name="LUNAR_CALENDAR" value="">
 
 		</div>
 		<input type="hidden" id="BIRTHDAY" name="BIRTHDAY" value="1992-1-1">
@@ -256,18 +256,18 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="s-user-top onclik-nick_name" style="background:#fff;display: none" id="zidingyi">
 		<div class="dis-box s-xian-box s-user-top-1">
 			<h3 style="width: 80px;font-size: 16px;margin-top: 7px;">关系名称</h3>
 			<input type="text"  id="qitas" placeholder="请输入关系" style="font-size: 1.4rem;" />
-			
+
 		</div>
 	</div>
 	<div id="wrapper">
 
 		<!-- header 开始 -->
-    	
+
 <!-- header 结束 -->
 			<div style="height:25px;width:100%;background:#eeeeee;margin-top:20px;line-height:25px;color:#a0a0a0">
 				&nbsp;&nbsp;&nbsp;&nbsp;提醒天数设置
@@ -276,22 +276,22 @@
 		<ul class="tabslider">
 			<li onclick="check(this)"  class="licls">
 				<div class="wenzi">
-					生日当天  
-					
+					生日当天
+
 					<div class="birimgdiv" myvalue="0">
 						<img alt="" src="static/lshapp/images/Selected_red.png" style="width: 20px;height: 20px"></img>
 					</div>
 				</div>
-					
+
 			</li>
 			<li onclick="check(this)" class="licls">
 				<div class="wenzi">
-				提前一天				
+				提前一天
 				<div class="birimgdiv"  myvalue="1">
 						<img alt="" src="static/lshapp/images/Selected_red.png" style="width: 20px;height: 20px"></img>
 				</div>
-				
-				</div>		
+
+				</div>
 			</li>
 			<li onclick="check(this)"  class="licls">
 				<div class="wenzi">
@@ -317,7 +317,7 @@
 					</div>
 				</div>
 			</li>
-			
+
 		</ul>
 		<div style="height:25px;width:100%;background:#eeeeee;line-height:25px;color:#a0a0a0">
 				&nbsp;&nbsp;&nbsp;&nbsp;双历提醒
@@ -349,12 +349,12 @@
 				</div>
 			</li>
 			</ul>
-	<%-- <div style="height:50px;width:100%;margin-top:10px;line-height:50px;">	
+	<%-- <div style="height:50px;width:100%;margin-top:10px;line-height:50px;">
 		<span style="margin-left:20px;color:#a0a0a0;">公历生日和农历生日都将提醒</span>
 		<img onclick="switchs(this)" class="switchsDiv" src="static/lshapp/images/<c:if test="${pd.REMIND_TYPE ==1 }">on.png</c:if><c:if test="${pd.REMIND_TYPE == 0}">off.png</c:if>" >
 	</div> --%>
 </div>
-	
+
 <!-- 	<div class="s-user-top onclik-nick_name" style="background:#fff;" onclick="goBirthdayRemind()"> -->
 <!-- 		<div class="dis-box s-xian-box s-user-top-1"> -->
 <!-- 			<h3 class="box-flex text-all-span my-u-title-size">设置生日提醒</h3> -->
@@ -363,8 +363,8 @@
 <!-- 			</div> -->
 <!-- 		</div> -->
 <!-- 	</div> -->
-	
-	
+
+
 	<div class="btn_base btn_color" onclick="addUser()">
 		<!-- <div class="dis-box s-xian-box s-user-top-1">
 			<h3 class="box-flex text-all-span my-u-title-size">设置生日提醒</h3>
@@ -372,20 +372,20 @@
 				<img src="static/images/right arrow1-hdpi.png">
 			</div>
 		</div> -->
-	
+
        				 保存
-    
+
 
 	</div>
 	<!-- 遮罩层 -->
     	<div class="z_mask">
 			          <!--弹出框-->
 			          <div class="z_alert">
-			              <p ><img src="static/lshapp/images/jiazais.gif"/></p>	
-			              <p style="color: white;padding-top: 5px;" id="xinxi">图片加载中</p>			  		          
+			              <p ><img src="static/lshapp/images/jiazais.gif"/></p>
+			              <p style="color: white;padding-top: 5px;" id="xinxi">图片加载中</p>
 			          </div>
 			      </div>
-	
+
 
 </div>
 
@@ -402,7 +402,7 @@
 <!--悬浮菜单e-->
 	<!--图片上传-->
 		<script src="static/lshapp/js/center/ajaxfileupload.js"></script>
-		
+
 		<script type="text/javascript">
 		function check(obj){
 			var $v = $(obj);
@@ -411,7 +411,7 @@
 			}else{
 		 		$v.find(".birimgdiv").addClass("on");
 			}
-			
+
 			$("#ADVANCE_DATE_COUNT").val("");
 		    $(".Newsinfo .birimgdiv").each(function(){
 			if($(this).hasClass("on")){
@@ -421,7 +421,7 @@
 			}
 		  });
 		}
-		    
+
 		    function remind(obj){
 		    	$(".reminddiv").each(function(){
 		    		$(this).removeClass("checkeds");
@@ -431,13 +431,13 @@
 		    	myvalue=$v.attr("myvalue");
 		    	$("#REMIND_TYPE").val(myvalue);
 		    }
-		
+
 		</script>
-		
+
 		<script type="text/javascript">
-		
-		
-		
+
+
+
 		function goBirthdayRemind(){
 			$(".mb-7").css("display","none");
 			$("#remind").css("display","block");
@@ -446,10 +446,10 @@
 			$(".mb-7").css("display","block");
 			$("#remind").css("display","none");
 		}
-		
-		
-		
-		
+
+
+
+
 		$("#qita").click(function(){
 			$("#zidingyi").css("display","block");
 		});
@@ -537,7 +537,7 @@
 			}
 		}
 		var int1=self.setInterval("clock()",500);
-		
+
 		function showDate(obj){
 			if($(obj).val()){
 				window.location.href="<%=basePath%>lshapp/appLogin/dateSelector1.do?ymd="+$(obj).val();
@@ -548,10 +548,10 @@
 		}
 		</script>
 	   <script type="text/javascript">
-	   
+
 
 	 //保存
-		function addUser(){		
+		function addUser(){
 			 var inpval = $("#qitas").val();
 			 if($('input[name="RELATIONSHIP"]:checked').val() == 1){
 				 if(inpval==""){
@@ -559,7 +559,7 @@
 						return false;
 					}else{
 						$("#qita").val(inpval);
-					}				 
+					}
 			 }
 			if($("#NAME").val()==""){
 				d_messages("姓名不能为空！");
@@ -569,12 +569,12 @@
 				d_messages("你还没设置生日提醒哦！");
 				return false;
 			}
-			
+
 			if($("#SOLAR_BIRTHDAY").val()==""){
 				d_messages("生日不能为空！");
 				return false;
 			}
-			
+
 			var phonenum = $("#PHONE_NUMBER").val();
 			var myreg = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/;
 			if($("#PHONE_NUMBER").val()=="" || !myreg.test(phonenum)){
@@ -587,26 +587,26 @@
 		}
 	</script>
 	<script type="text/javascript">
-	$(function(){	
-		var options = { 
+	$(function(){
+		var options = {
 			type: 'POST',
-	        success:showResponse, 
-			error : function(xhr, status, err) {			
+	        success:showResponse,
+			error : function(xhr, status, err) {
 				alert("操作失败");
 			}
-	    }; 
-	    $("#Form").submit(function(){ 
-	        $(this).ajaxSubmit(options); 
+	    };
+	    $("#Form").submit(function(){
+	        $(this).ajaxSubmit(options);
 	        return false;   //防止表单自动提交
 	    });
 	});
     /**
      * 保存操作
      */
-    function toSave(){ 
+    function toSave(){
     	$("#Form").submit();
     }
-     
+
     /**
      * 保存后，执行回调
      * @param responseText
@@ -614,7 +614,7 @@
      * @param xhr
      * @param $form
      */
-    function showResponse(responseText, statusText, xhr, $form){ 	
+    function showResponse(responseText, statusText, xhr, $form){
     	/* if(responseText.status == "0"){
     	} else {
     	}	 */

@@ -36,6 +36,9 @@
 			<link rel="stylesheet" type="text/css" href="static/lshapp/css/shoujisc.css">
 		<script type="text/javascript" src="static/lshapp/js/mobile-util.js"></script>
 		<script type="text/javascript" src="static/lshapp/js/fastclick2.js"></script>
+
+		<script src="static/lshapp/js/layer.js"></script>
+
 		<style type="text/css">
 			::-webkit-input-placeholder { /* WebKit browsers */
 				color: rgba(0, 0, 0, .5);
@@ -186,6 +189,12 @@
 		<script src="static/js/jquery.cookie.js"></script>
 		<script src="static/lshapp/js/fastclick2.js"></script>
 		<div class="contents">
+
+			<input type="hidden" id="token" value="${pdUser.TOKEN}"/>
+			<input type="hidden" id="businessLicense" value="${pdUser.BUSINESS_LICENSE}"/><!-- 营业执照 -->
+			<input type="hidden" id="identityCard" value="${pdUser.IDENTITY_CARD}"/><!-- 身份证 -->
+			<input type="hidden" id="review" value="${pdUser.REVIEW}"/><!-- 审核是否通过(-1代表未通过，0代表待审核，1代表已审核) -->
+
 			<!-- <div class="fgheader"><a href="javascript:window.history.go(-1);"><img src="images/Return.png"></a>代理入口</div> -->
 			<ul class="clistUl">
 				<c:forEach items="${varList}" var="var" varStatus="vs">
@@ -282,11 +291,46 @@
 					pay1(t);
 				}
 			} */
+			//购买
 			function pay(id,money) {
-				document.getElementById("fasnhu").style.display = "block";
-				document.getElementById("zhezao").style.display = "block";
-				$("#test").val(id);
-				$(".talmoney").html("￥"+money);
+				debugger
+				var token = $('#token').val();
+				var businessLicense = $('#businessLicense').val();//营业执照
+				var identityCard = $('#identityCard').val();//身份证
+				var review = $('#review').val();//审核是否通过(-1代表未通过，0代表待审核，1代表已审核)
+				if(money == 5500.00){
+					if(businessLicense == "" || businessLicense == null || identityCardssss == ""
+							|| identityCardssss == null ){
+						layer.open({
+							content: '您还没有上传证件，上传审核通过后才能购买哦~',
+							btn:['去上传','取消'],
+							yes:function(index){
+								window.location.href ='<%=basePath%>lshapp/userCenter/user_identity_authentication.do?token='+token;
+							}
+						});
+					}
+				}else if(money == 5500.00 && review == 0){
+					layer.open({
+						content : '您上传的证件正在审核，请耐心等待',
+						skin : 'msg',
+						time : 3, //3秒后自动关闭
+						style : 'border:none; background-color:#FF4351; color:#fff;'
+					});
+				}else if(money == 5500.00 && review == -1){
+					layer.open({
+						content: '您上传的证件未通过，请重新上传',
+						btn:['去上传','取消'],
+						yes:function(index){
+							window.location.href ='<%=basePath%>lshapp/userCenter/user_identity_authentication.do?token='+token;
+						}
+					});
+				}else{
+					document.getElementById("fasnhu").style.display = "block";
+					document.getElementById("zhezao").style.display = "block";
+					$("#test").val(id);
+					$(".talmoney").html("￥"+money);
+				}
+
 			}
 			//代理购买
 			function immediatePayment() {

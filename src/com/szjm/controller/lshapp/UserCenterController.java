@@ -120,7 +120,6 @@ public class UserCenterController extends BaseController {
 		view.setViewName("lshapp/center/center_index");
 		return view;
 	}
-
 	/**
 	 * 去用户修改个人资料页面
 	 */
@@ -134,25 +133,27 @@ public class UserCenterController extends BaseController {
 		Integer user_id = Jurisdiction.getAppUserId();
 		pd.put("USER_ID", user_id);
 		PageData pdUser = appuserService.findById(pd);
-		String advance_date_count = pdUser.get("ADVANCE_DATE_COUNT").toString();
-		String[] split = advance_date_count.split(",");
-		for (int i = 0; i < split.length; i++) {
-			if("0".equals(split[i])){
-				pds.put("ad0", "9");
-			}
-			if("1".equals(split[i])){
-				pds.put("ad1", "9");
-			}
-			if("3".equals(split[i])){
-				pds.put("ad3", "9");
-			}
-			if("7".equals(split[i])){
-				pds.put("ad7", "9");
-			}
-			if("30".equals(split[i])){
-				pds.put("ad30", "9");
-			}
+		if(pdUser.get("ADVANCE_DATE_COUNT")!=null&&!"".equals(pdUser.get("ADVANCE_DATE_COUNT").toString())){
+			String advance_date_count = pdUser.get("ADVANCE_DATE_COUNT").toString();
+			String[] split = advance_date_count.split(",");
+			for (int i = 0; i < split.length; i++) {
+				if("0".equals(split[i])){
+					pds.put("ad0", "9");
+				}
+				if("1".equals(split[i])){
+					pds.put("ad1", "9");
+				}
+				if("3".equals(split[i])){
+					pds.put("ad3", "9");
+				}
+				if("7".equals(split[i])){
+					pds.put("ad7", "9");
+				}
+				if("30".equals(split[i])){
+					pds.put("ad30", "9");
+				}
 
+			}
 		}
 		view.addObject("pd", pdUser);
 		view.addObject("pds", pds);
@@ -1739,4 +1740,167 @@ public class UserCenterController extends BaseController {
 		return view;
 	}
 
+	/**
+	 * 去转增金豆界面
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/goForwardBean")
+	public ModelAndView go_forward_bean(HttpServletRequest request)
+			throws Exception {
+		Integer appUserId = Jurisdiction.getAppUserId();
+		ModelAndView view = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		String receive_user_id = pd.get("user_id").toString();//接受人id
+		pd.put("USER_ID", appUserId);
+		//当前用户
+		if(!(appUserId+"").equals(receive_user_id)){
+			pd=lshuserService.findById(pd);
+			pd.put("receive_user_id", receive_user_id);
+			view.addObject("pd", pd);
+			view.setViewName("lshapp/go_forward_bean");
+		}else{
+
+		}
+		return view;
+	}
+
+	/**
+	 * 生成二维码页面 (用来转让金豆)
+	 *
+	 * @param page
+	 * @throws Exception
+	 */
+	//@RequestMapping(value = "/transfer")
+	@RequestMapping(value = "/bean_transfer")
+	public ModelAndView agentList(HttpServletRequest request) throws Exception {
+		//String beanNumber = request.getParameter("beanNumber");
+		//String token = request.getParameter("token");
+		//Integer userId = Jurisdiction.getAppUserId();
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		/*pd = this.getPageData();*/
+		Integer user_id = Jurisdiction.getAppUserId();//获取当前用户id
+		pd.put("USER_ID", user_id);
+		PageData pdUser = appuserService.findById(pd);
+		String path = request.getContextPath();
+		String basePath = request.getScheme() + "://" + request.getServerName()
+				+ ":" + request.getServerPort() + path + "/";
+    	pd.put("XIAZAI", "XIAZAI");
+    	pd=softwareupdateService.findById(pd);
+    	mv.addObject("pd", pdUser);
+    	mv.addObject("url",  basePath + "lshapp/userCenter/goForwardBean/"+pd.get("PATH"));
+    	//mv.setViewName("lshapp/transfer");
+		mv.setViewName("lshapp/bean_transfer");
+		return mv;
+	}
+
+	/**
+	 * 转增金豆保存
+	 */
+	@RequestMapping(value="/forwardBean")
+	@ResponseBody
+	public String forwardBean() throws Exception{
+		Integer appUserId = Jurisdiction.getAppUserId();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		PageData pdUser=new PageData();
+		pdUser.put("USER_ID", appUserId);
+		//当前用户
+		pdUser=lshuserService.findById(pdUser);
+		//转送人
+		pd.put("USER_ID", pd.get("user_id"));
+		PageData pdReceive=lshuserService.findById(pd);
+		//减少当前用户的金豆数量
+		int number=Integer.valueOf(pdUser.get("INTEGRATION").toString())-Integer.valueOf(pd.get("bean_number").toString());
+		pdUser.put("INTEGRATION", number);
+		lshuserService.edit(pdUser);
+		//增加传送人的金豆数量
+		int number1=Integer.valueOf(pdReceive.get("INTEGRATION").toString())+Integer.valueOf(pd.get("bean_number").toString());
+		pdReceive.put("INTEGRATION", number1);
+		lshuserService.edit(pdReceive);
+		//增加当前用户的金豆消费记录
+		PageData pdIn = new PageData();
+		pdIn.remove("INTEGRATIONRECORD_ID");
+		pdIn.put("USER_ID", appUserId);
+		pdIn.put("RECORD_TYPE", 1);
+		pdIn.put("AMOUNT", Integer.valueOf(pd.get("bean_number").toString()));
+		pdIn.put("DELETE_STATUS", 0);
+		pdIn.put("INCOME_REASON", 7);
+		pdIn.put("CREATE_DATE", Tools.date2Str(new Date()));
+		pdIn.put("RECEIVE_USER_ID", pd.get("user_id"));
+		integrationrecordService.save(pdIn);// 保存抽奖记录
+		//增加传送人的金豆消费记录
+		PageData pdXf1 = new PageData();
+		pdXf1.remove("INTEGRATIONRECORD_ID");
+		pdXf1.put("USER_ID", pd.get("user_id"));
+		pdXf1.put("RECORD_TYPE", 0);
+		pdXf1.put("AMOUNT", Integer.valueOf(pd.get("bean_number").toString()));
+		pdXf1.put("DELETE_STATUS", 0);
+		pdXf1.put("INCOME_REASON", 8);
+		pdXf1.put("CREATE_DATE", Tools.date2Str(new Date()));
+		pdXf1.put("RECEIVE_USER_ID", appUserId);
+		integrationrecordService.save(pdXf1);// 保存抽奖记录
+		return "success";
+	}
+
+
+	/**
+	 * 进入身份认证页面修改个人资料
+	 */
+	@RequestMapping(value = "/user_identity_authentication")
+	public ModelAndView user_identity_authentication(HttpServletRequest request)
+			throws Exception {
+		ModelAndView view = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		Integer user_id = Jurisdiction.getAppUserId();//获取当前用户id
+		pd.put("USER_ID", user_id);
+		PageData pdUser = appuserService.findById(pd);
+		view.addObject("pd", pdUser);
+		view.setViewName("lshapp/center/user_identity_authentication");
+		return view;
+	}
+
+	/**
+	 * 修改个人营业执照图片
+	 */
+	@RequestMapping(value = "/update_business_license")
+	@ResponseBody
+	public String update_business_license(HttpServletRequest request) throws Exception {
+		String  businessLicense =  request.getParameter("BUSINESS_LICENSE");
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		Integer user_id = Jurisdiction.getAppUserId();//获取当前用户id
+		pd.put("USER_ID", user_id);//用户id
+		pd.put("BUSINESS_LICENSE", businessLicense);//营业执
+		String identityCard = pd.get("IDENTITY_CARD")+"";//获取身份证
+		if(identityCard != null && "".equals(identityCard)) {//判断是否上传了身份证 如果已上传修改信息
+			pd.put("REVIEW", 0);//审核是否通过(-1代表未通过，0代表待审核，1代表已审核)
+		}
+		appuserService.edit(pd);
+		return "success";
+	}
+
+	/**
+	 * 修改个人身份证图片
+	 */
+	@RequestMapping(value = "/update_identity_card")
+	@ResponseBody
+	public String update_identity_card(HttpServletRequest request) throws Exception {
+		String  identityCard =  request.getParameter("IDENTITY_CARD");
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		Integer user_id = Jurisdiction.getAppUserId();//获取当前用户id
+		pd.put("USER_ID", user_id);//用户id
+		pd.put("IDENTITY_CARD", identityCard);//身份证
+		String businessLicense = pd.get("BUSINESS_LICENSE")+"";//获取营业执
+		if(businessLicense != null && "".equals(businessLicense)) {//判断是否上传了营业执 如果已上传修改信息
+			pd.put("REVIEW", 0);//审核是否通过(-1代表未通过，0代表待审核，1代表已审核)
+		}
+		appuserService.edit(pd);
+		return "success";
+	}
 }

@@ -518,7 +518,7 @@ ssjg-tit1
 .spxq-info2 .spxq-box{ width:100%;}
 .spxq-box .spxq-k1{ width:100%; text-align:center;}
 .spxq-k1 img{ display:inline-block; width:100%;}
-.nextstep{width:66%;margin:100px auto;height:46px;line-height:46px;background-image: -webkit-linear-gradient(left, #4fa7fe, #8d93fd);background-image: -moz-linear-gradient(left, #4fa7fe, #8d93fd);color:#fff;text-align:center;border-radius:50px;font-weight: bold;letter-spacing: 3px;font-size: 17px;}
+.nextstep{width:66%;margin:100px auto;height:46px;line-height:46px;background-image: -webkit-linear-gradient(left, #fea54f, #e40d3f);background-image: -moz-linear-gradient(left, #4fa7fe, #8d93fd);color:#fff;text-align:center;border-radius:50px;font-weight: bold;letter-spacing: 3px;font-size: 17px;}
 .arrowhistory{display:inline-block;width:1rem;height:1rem;background: url(../images/rightarrow_new.png) no-repeat 96% center;transform:rotate(-180deg);position:absolute;left:1rem;top:1.5rem;background-size:50% 100%;}
 .arrowhistorys{display:block;width:1rem;height:1rem;background: url(../images/rightarrow_new.png) no-repeat 96% center;position:absolute;right:1rem;top:1.5rem;background-size:50% 100%;}
 .ddtab{width:100%;margin:10px 0;}

@@ -19,7 +19,8 @@
 		DELETE_STATUS,
 		INCOME_REASON,
 		USER_ID,
-		ORDER_ID
+		ORDER_ID,
+		RECEIVE_USER_ID
 	</sql>
 	<!-- 带别名字段 -->
 	<sql id="FieldWithAlias">
@@ -33,7 +34,8 @@
 		o.DELETE_STATUS,
 		o.INCOME_REASON,
 		o.USER_ID,
-		o.ORDER_ID
+		o.ORDER_ID,
+		o.RECEIVE_USER_ID
 	</sql>
 	<!-- 字段值 -->
 	<sql id="FieldValue">
@@ -47,7 +49,9 @@
 		#{DELETE_STATUS},
 		#{INCOME_REASON},
 		#{USER_ID},
-		#{ORDER_ID}
+		#{ORDER_ID},
+		#{RECEIVE_USER_ID}
+
 	</sql>
 
 	<!-- 新增-->
@@ -85,6 +89,7 @@
 			INCOME_REASON = #{INCOME_REASON},
 			USER_ID = #{USER_ID},
 			ORDER_ID = #{ORDER_ID},
+			RECEIVE_USER_ID = #{RECEIVE_USER_ID},
 		INTEGRATIONRECORD_ID = INTEGRATIONRECORD_ID
 		where
 		INTEGRATIONRECORD_ID = #{INTEGRATIONRECORD_ID}
