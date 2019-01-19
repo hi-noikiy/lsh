@@ -78,7 +78,7 @@ input[type="radio"] + label::before {
 			width:1.2rem;
 			height:1.8rem;
 		}
-		
+
 		.z_mask {
             width: 100%;
             height: 100%;
@@ -129,6 +129,21 @@ input[type="radio"] + label::before {
     </div>
  </div>
 
+  <div style="height: 50px;width: 100%;text-align: center;">
+	<div style="float:left;height: 50px;width: 21%;line-height:50px">登录账户</div>
+	<div class="text" style="width: 78%;float: right;">
+
+       <input type="number" placeholder="请输入手机号" class="input" id="PHONE_NUMBER" name="PHONE_NUMBER">
+    </div>
+ </div>
+
+  <div style="height: 50px;width: 100%;text-align: center;">
+	<div style="float:left;height: 50px;width: 21%;line-height:50px">验证码</div>
+	<div class="text" style="width: 78%;float: right;">
+        <input type="text" placeholder="请输入验证码" class="input" style="width:55%" id="CODE" name="CODE">
+      <span class="yzm" ><input type="button" id="second" value="获取验证码" style="float: right;width:75px; height: 42px;-webkit-appearance: none"></span>
+    </div>
+ </div>
 <!--  <div style="height: 50px;width: 100%;text-align: center;"> -->
 <!-- 	<div style="float:left;height: 50px;width: 21%;line-height:50px">昵称</div> -->
 <!-- 	<div class="text" style="width: 78%;float: right;"> -->
@@ -168,21 +183,6 @@ input[type="radio"] + label::before {
 <!--     </div> -->
 <!--  </div> -->
 
-  <div style="height: 50px;width: 100%;text-align: center;">
-	<div style="float:left;height: 50px;width: 21%;line-height:50px">登录账户</div>
-	<div class="text" style="width: 78%;float: right;">
-
-       <input type="number" placeholder="请输入手机号" class="input" id="PHONE_NUMBER" name="PHONE_NUMBER">
-    </div>
- </div>
-
-  <div style="height: 50px;width: 100%;text-align: center;">
-	<div style="float:left;height: 50px;width: 21%;line-height:50px">验证码</div>
-	<div class="text" style="width: 78%;float: right;">
-        <input type="text" placeholder="请输入验证码" class="input" style="width:55%" id="CODE" name="CODE">
-      <span class="yzm" ><input type="button" id="second" value="获取验证码" style="float: right;width:75px; height: 42px;-webkit-appearance: none"></span>
-    </div>
- </div>
 
     <div class="btndl"  ><input type="button" id="butts" value="注 册" style="margin-bottom: 30px;-webkit-appearance: none" onclick="save()"></div>
 </div>
@@ -190,8 +190,8 @@ input[type="radio"] + label::before {
 				 <div class="z_mask">
 			          <!--弹出框-->
 			          <div class="z_alert">
-			              <p ><img src="static/lshapp/images/jiazais.gif"/></p>	
-			              <p style="color: white;padding-top: 5px;">正在注册</p>			  		          
+			              <p ><img src="static/lshapp/images/jiazais.gif"/></p>
+			              <p style="color: white;padding-top: 5px;">正在注册</p>
 			          </div>
 			      </div>
 </form>
@@ -207,12 +207,12 @@ input[type="radio"] + label::before {
 			    });
 			}
 		  //  v = getCookieValue("secondsremained");//获取cookie值
-		
+
 		})
 		//开始倒计时
 		var countdown=60;
 		function settime(obj) {
-		
+
 		    if (countdown == 0) {
 		        obj.removeAttr("disabled");
 		        obj.val("获取验证码");
@@ -223,7 +223,7 @@ input[type="radio"] + label::before {
 		        obj.attr("disabled", true);
 		        obj.val("重新发送(" + countdown + ")");
 		        countdown--;
-		
+
 		    }
 		    setTimeout(function() {
 		    	settime(obj)
@@ -254,7 +254,7 @@ input[type="radio"] + label::before {
 
 	    }
 	}
-	
+
 		 function doPostBack(queryParam,obj) {
 		    $.ajax({
 		        /* async : false,
@@ -264,7 +264,7 @@ input[type="radio"] + label::before {
 		        url : "<%=basePath%>lshapp/appLogin/sendMsg.do",// 请求的action路径
 		        data:queryParam,
 		        success: function(data){// 请求失败处理函数
-		        	if(data=="success"){		        		
+		        	if(data=="success"){
 			    	    settime(obj);//开始倒计时
 		        		d_messages("验证码发送成功！");
 		        	}else if(data=="false"){
@@ -293,7 +293,7 @@ input[type="radio"] + label::before {
 		}
 
 		//提交保存
-		function save(){ 
+		function save(){
 				var zhengze = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/;
 			 	var NICK_NAME = $("#NICK_NAME").val();
 			 	var PASSWORD = $("#PASSWORD").val();
@@ -302,9 +302,9 @@ input[type="radio"] + label::before {
 					d_messages("密码不相同，请确认!");
 					return false;
 				}
-			 	
-			 	
-			 	
+
+
+
 			 	if(NICK_NAME==""){
 			 		d_messages("昵称不能为空!");
 					return false;
@@ -335,8 +335,8 @@ input[type="radio"] + label::before {
 					d_messages("验证码不能为空");
 					return false;
 				}
-				
-				
+
+
 				var INVITE_CODE = $("#INVITE_CODE").val();
 				var NICK_NAME = $("#NICK_NAME").val();
 				var PASSWORD = $("#PASSWORD").val();
@@ -361,22 +361,22 @@ input[type="radio"] + label::before {
 						        	}else if(data== "1"){
 						        		d_messages("注册账号成功！");
 						    			setTimeout(function(){
-						    				openPage();	
-						    				
+						    				openPage();
+
 						    			},1000);
 						        	}else if(data== "2"){
 						        		d_messages("手机号已存在 ！");
 						        	}
 						        },
 						    });
-			        		
-			        		
-			        		
-			        		
-			        		
+
+
+
+
+
 			        		//$("#butts").attr("disabled",true);
-			        		//$("#Form").submit();	
-			        		
+			        		//$("#Form").submit();
+
 			        	}else if(data=="false"){
 			        		d_messages("验证码已过期!");
 			        	}else if(data=="false1"){
@@ -442,28 +442,28 @@ input[type="radio"] + label::before {
 
 		}
 	</script>
-	
+
 	<script type="text/javascript">
-	$(function(){	
-		var options = { 
+	$(function(){
+		var options = {
 			type: 'POST',
-	        success:showResponse, 
-			error : function(xhr, status, err) {			
+	        success:showResponse,
+			error : function(xhr, status, err) {
 				alert("操作失败");
 			}
-	    }; 
-	    $("#Form").submit(function(){ 
-	        $(this).ajaxSubmit(options); 
+	    };
+	    $("#Form").submit(function(){
+	        $(this).ajaxSubmit(options);
 	        return false;   //防止表单自动提交
 	    });
 	});
     /**
      * 保存操作
      */
-    function toSave(){ 
+    function toSave(){
     	$("#Form").submit();
     }
-     
+
     /**
      * 保存后，执行回调
      * @param responseText
@@ -471,19 +471,19 @@ input[type="radio"] + label::before {
      * @param xhr
      * @param $form
      */
-    function showResponse(responseText, statusText, xhr, $form){ 	
+    function showResponse(responseText, statusText, xhr, $form){
     	if(responseText == 0){
     		d_messages("微信号已存在 ！");
     	} else {
     		d_messages("注册账号成功！");
 			setTimeout(function(){
 				openPage();
-				//$(".z_mask").css("display","none") ;	
+				//$(".z_mask").css("display","none") ;
 			},1000);
-			
-    		
-    	}	
-    	
+
+
+    	}
+
     }
     function openPage() {
         var data='{"index":"5"}';
@@ -495,8 +495,8 @@ input[type="radio"] + label::before {
         );
     }
 	</script>
-	
-	
+
+
      <!-- <style type="text/css">
 		.user_icon1{
 			width: 1.0rem;

@@ -3,9 +3,13 @@ package com.szjm.controller.lshapp;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
 import com.szjm.controller.base.BaseController;
 import com.szjm.entity.Page;
 import com.szjm.util.PageData;
@@ -20,7 +25,7 @@ import com.szjm.util.Jurisdiction;
 import com.szjm.util.Tools;
 import com.szjm.service.lsh.memorialday.MemorialDayManager;
 
-/** 
+/**
  * 说明：纪念日
  * 创建人：
  * 创建时间：2018-07-24
@@ -28,12 +33,12 @@ import com.szjm.service.lsh.memorialday.MemorialDayManager;
 @Controller
 @RequestMapping(value="/lshapp/memorialday")
 public class MemorialdayController extends BaseController {
-	
+
 	@Resource(name="memorialdayService")
 	private MemorialDayManager memorialdayService;
-	
-	
-	
+
+
+
 	/**去添加纪念日页面
 	 * @param
 	 * @throws Exception
@@ -44,8 +49,8 @@ public class MemorialdayController extends BaseController {
 		mv.setViewName("lshapp/add_commemorate");
 		mv.addObject("msg", "addMemorialday");
 		return mv;
-	}	
-	
+	}
+
 	/**保存
 	 * @param
 	 * @throws Exception
@@ -63,9 +68,9 @@ public class MemorialdayController extends BaseController {
 		memorialdayService.save(pd);
 		return "1";
 	}
-	
-	
-	
+
+
+
 	/**删除
 	 * @param out
 	 * @throws Exception
@@ -73,13 +78,13 @@ public class MemorialdayController extends BaseController {
 	@RequestMapping(value="/deleteMemorialday")
 	@ResponseBody
 	public String delete() throws Exception{
-		
+
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		memorialdayService.delete(pd);
 		return "1";
 	}
-	
+
 	/**修改
 	 * @param
 	 * @throws Exception
@@ -92,14 +97,14 @@ public class MemorialdayController extends BaseController {
 		memorialdayService.edit(pd);
 		return "1";
 	}
-	
+
 	/**列表
 	 * @param page
 	 * @throws Exception
 	 */
 	@RequestMapping(value="/list")
 	public ModelAndView list(Page page) throws Exception{
-		
+
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -115,9 +120,9 @@ public class MemorialdayController extends BaseController {
 		mv.addObject("QX",Jurisdiction.getHC());	//按钮权限
 		return mv;
 	}
-	
-	
-	
+
+
+
 	 /**去修改页面
 	 * @param
 	 * @throws Exception
@@ -131,10 +136,16 @@ public class MemorialdayController extends BaseController {
 		mv.setViewName("lshapp/add_commemorate");
 		mv.addObject("msg", "editMemorialday");
 		mv.addObject("pd", pd);
+		List<String> adc=new ArrayList<String>();//提前提醒日期
+		if(pd.get("ADVANCE_DATE_COUNT")!=null){
+			String ADVANCE_DATE_COUNT=pd.get("ADVANCE_DATE_COUNT").toString();
+			adc = Arrays.asList(ADVANCE_DATE_COUNT.split(","));
+		}
+		mv.addObject("adc", adc);
 		return mv;
-	}	
-	
-	
+	}
+
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder){
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");

@@ -17,7 +17,8 @@
 		UPDATE_USER,
 		DELETE_STATUS,
 		NAME,
-		COMMEMORATE_DATE
+		COMMEMORATE_DATE,
+		ADVANCE_DATE_COUNT
 	</sql>
 
 	<!-- 字段值 -->
@@ -30,7 +31,8 @@
 		#{UPDATE_USER},
 		#{DELETE_STATUS},
 		#{NAME},
-		#{COMMEMORATE_DATE}
+		#{COMMEMORATE_DATE},
+		#{ADVANCE_DATE_COUNT}
 	</sql>
 
 	<!-- 新增-->
@@ -80,6 +82,9 @@
 			</if>
 			<if test="COMMEMORATE_DATE!=null and COMMEMORATE_DATE!=''">	
 			COMMEMORATE_DATE = #{COMMEMORATE_DATE},
+			</if>
+			<if test="ADVANCE_DATE_COUNT!=null and ADVANCE_DATE_COUNT!=''">	
+			ADVANCE_DATE_COUNT = #{ADVANCE_DATE_COUNT},
 			</if>
 			MEMORIALDAY_ID = MEMORIALDAY_ID
 			where

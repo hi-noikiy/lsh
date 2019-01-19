@@ -23,12 +23,47 @@
 	<link rel="stylesheet" type="text/css" href="static/lshapp/css/weui.css" />
 	<link href="static/lshapp/css/goods_type.css" rel="stylesheet"type="text/css">
 	<link rel="stylesheet" type="text/css" href="static/lshapp/css/global.css"/>
+	<link rel="stylesheet" type="text/css" href="static/lshapp/css/editbirthdaysytle.css" />
 	<script src="static/lshapp/js/goods_type.js"></script>
 	<script src="static/lshapp/js/zepto.min.js"></script>
 	<script src="static/lshapp/js/center/jquery-1.9.1.min.js"></script>
 	<script src="static/lshapp/js/jquery.form.js"></script>
-	
+
 	<style type="text/css">
+    	.wenzi{
+	width:100%;
+	height:10%;
+	margin-left:8px;
+}
+.imgdiv{
+	height: 20px;
+	width: 30px;
+	float: right;
+	display:none;
+}
+
+
+
+.birimgdiv{
+	height: 20px;
+	width: 30px;
+	float: right;
+}
+
+.on{
+    display:block;
+ }
+.off{
+     display:none;
+ }
+ div.checkeds{
+	display:block;
+}
+.switchsDiv{
+	width: 62px;
+	height: 40px;
+	margin-left: 20%;
+}
       .btn_base{
 			color:#FFFFFF;
             font-weight: bold;
@@ -74,6 +109,7 @@
 
 <form action="<%=basePath%>lshapp/memorialday/${msg}.do" name="Form" id="Form" method="post">
 	<input type="hidden" id="MEMORIALDAY_ID" name="MEMORIALDAY_ID" value="${pd.MEMORIALDAY_ID }">
+	<input type="hidden" id="ADVANCE_DATE_COUNT" name="ADVANCE_DATE_COUNT">
 	<div class="con mb-7">
 	<c:if test="${pd.NAME ==null }">
 		<jsp:include page="head_title.jsp">
@@ -86,7 +122,7 @@
 		</jsp:include>
 	</c:if>
 			<div  style="width:100%;height:140px;">
-				<img id="imgId" src="static/lshapp/images/banner-hdpi.jpg" style="height:140px;width:100%">	
+				<img id="imgId" src="static/lshapp/images/banner-hdpi.jpg" style="height:140px;width:100%">
 			</div>
 	<div class="s-user-top onclik-nick_name" style="background:#fff;">
 		<div class="dis-box s-xian-box s-user-top-1">
@@ -94,22 +130,81 @@
 			<input type="text" id="NAME" name="NAME" value="${pd.NAME }"  placeholder="请输入纪念名称" style="font-size: 1.4rem;"/>
 		</div>
 	</div>
-	
+
 	<div class="s-user-top onclik-nick_name" style="background:#fff;">
 		<div class="dis-box s-xian-box s-user-top-1">
 			<h3 style="width: 80px;font-size: 16px;margin-top: 3px;">日期</h3>
-			
+
 			<input style="border: 0;font-size:1.4rem;" type="text" value="${pd.COMMEMORATE_DATE }" placeholder="请选择日期" class="input" id="COMMEMORATE_DATE" name="COMMEMORATE_DATE" readonly="readonly" onclick="showDate(this);">
 		</div>
 	</div>
+
+
+<div id="wrapper">
+			<div style="height:25px;width:100%;background:#eeeeee;margin-top:20px;line-height:25px;color:#a0a0a0">
+				&nbsp;&nbsp;&nbsp;&nbsp;提醒天数设置
+			</div>
+	<div class="Newsinfo">
+		<ul class="tabslider">
+			<li onclick="check(this)"  class="licls">
+				<div class="wenzi">
+					生日当天
+					<div class="birimgdiv <c:if test="${fn:contains(adc, '0')}">on</c:if><c:if test="${!fn:contains(adc, '0')}">off</c:if>" myvalue="0">
+						<img alt="" src="static/lshapp/images/Selected_red.png" style="width: 20px;height: 20px"></img>
+					</div>
+				</div>
+
+			</li>
+			<li onclick="check(this)" class="licls">
+				<div class="wenzi">
+				提前一天
+				<div class="birimgdiv <c:if test="${fn:contains(adc, '1')}">on</c:if><c:if test="${!fn:contains(adc, '1')}">off</c:if>"  myvalue="1">
+						<img alt="" src="static/lshapp/images/Selected_red.png" style="width: 20px;height: 20px"></img>
+				</div>
+				</div>
+			</li>
+			<li onclick="check(this)"  class="licls">
+				<div class="wenzi">
+				提前三天
+				<div class="birimgdiv <c:if test="${fn:contains(adc, '3')}">on</c:if><c:if test="${!fn:contains(adc, '3')}">off</c:if>" myvalue="3">
+						<img alt="" src="static/lshapp/images/Selected_red.png" style="width: 20px;height: 20px"></img>
+					</div>
+				</div>
+			</li>
+			<li onclick="check(this)" class="licls">
+				<div class="wenzi">
+				提前七天
+				<div class="birimgdiv <c:if test="${fn:contains(adc, '7')}">on</c:if><c:if test="${!fn:contains(adc, '7')}">off</c:if>"  myvalue="7">
+						<img alt="" src="static/lshapp/images/Selected_red.png" style="width: 20px;height: 20px"></img>
+					</div>
+				</div>
+			</li>
+			<li onclick="check(this)"  class="licls">
+				<div class="wenzi">
+				提前三十天
+				<div class="birimgdiv <c:if test="${fn:contains(adc, '30')}">on</c:if><c:if test="${!fn:contains(adc, '30')}">off</c:if>" myvalue="30">
+						<img alt="" src="static/lshapp/images/Selected_red.png" style="width: 20px;height: 20px"></img>
+					</div>
+				</div>
+			</li>
+
+		</ul>
+		<div style="height:25px;width:100%;background:#eeeeee;line-height:25px;color:#a0a0a0">
+				&nbsp;&nbsp;&nbsp;&nbsp;双历提醒
+		</div>
+    </div>
+</div>
+
+
+
 	<div class="z_mask">
 			          <!--弹出框-->
 			          <div class="z_alert">
-			              <p ><img src="static/lshapp/images/jiazais.gif"/></p>	
-			              <p style="color: white;padding-top: 5px;" id="xinxi">图片加载中</p>			  		          
+			              <p ><img src="static/lshapp/images/jiazais.gif"/></p>
+			              <p style="color: white;padding-top: 5px;" id="xinxi">图片加载中</p>
 			          </div>
 			      </div>
-	
+
 	<c:if test="${pd != null }">
 		<div class="btn_base btn_color"  id="del">
 	        	删除
@@ -118,7 +213,7 @@
 	<div class="btn_base bc_color" onclick="add_commemorate()" <c:if test="${pd == null }">style="margin-left:32%;"</c:if>>
         	 保存
     </div>
-	
+
 </div>
 </form>
 	<script type="text/javascript" src="static/lshapp/js/windowOpen.js" ></script>
@@ -136,12 +231,12 @@
 		$("#xinxi").html("保存中...");
 		$(".z_mask").css("display","block") ;
 	}
-	
+
 	//删除用户
 	var setTitle = '';
 	var setContents = '';
 	var setButton = '';
-	$('#del').on('click',function(){			
+	$('#del').on('click',function(){
 		setTitle = '提示';
 		setContents = '确定要删除该纪念日吗？';
 		setButton = '["取消","确定"]';
@@ -154,7 +249,7 @@
 			//关闭弹窗的时候将蒙版和html从页面中移除掉
 			$oMasking.remove();
 			$oWindowContainer.remove();
-			
+
 				var Id=$("#MEMORIALDAY_ID").val();
 				$.ajax({
 					type: "POST",
@@ -168,15 +263,15 @@
 							$(".z_mask").css("display","none") ;
 					}
 				});
-			
-			
+
+
 		});
 	});
-	
-	
+
+
 	</script>
 	<script type="text/javascript">
-	   function clock(){		   
+	   function clock(){
 		   var d=new Date();
 		   if(localStorage.time&&d.getTime()<localStorage.time&&localStorage.val){
 				$("#COMMEMORATE_DATE").val(localStorage.val);
@@ -194,28 +289,28 @@
 
 		}
 	   </script>
-	   
+
 	   <script type="text/javascript">
-	   $(function(){	
-			var options = { 
+	   $(function(){
+			var options = {
 				type: 'POST',
-		        success:showResponse, 
-				error : function(xhr, status, err) {			
+		        success:showResponse,
+				error : function(xhr, status, err) {
 					alert("操作失败");
 				}
-		    }; 
-		    $("#Form").submit(function(){ 
-		        $(this).ajaxSubmit(options); 
+		    };
+		    $("#Form").submit(function(){
+		        $(this).ajaxSubmit(options);
 		        return false;   //防止表单自动提交
 		    });
 		});
 	    /**
 	     * 保存操作
 	     */
-	    function toSave(){ 
+	    function toSave(){
 	    	$("#Form").submit();
 	    }
-	     
+
 	    /**
 	     * 保存后，执行回调
 	     * @param responseText
@@ -223,7 +318,7 @@
 	     * @param xhr
 	     * @param $form
 	     */
-	    function showResponse(responseText, statusText, xhr, $form){ 	
+	    function showResponse(responseText, statusText, xhr, $form){
 	    	/* if(responseText.status == "0"){
 	    	} else {
 	    	}	 */
@@ -239,10 +334,38 @@
 	            }
 	        );
 	    }
-	   
+
 	   </script>
-	   
-	   
+
+
 	<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
     <script src="https://res.wx.qq.com/open/libs/weuijs/1.0.0/weui.min.js"></script>
+
+    <script>
+    	function check(obj){
+    		var $obj=$(obj);
+    		var check_img=$obj.find(".birimgdiv").first();
+    		if(check_img.hasClass("off")){
+    			check_img.removeClass("off");
+    			check_img.addClass("on");
+    		}else {
+    			check_img.removeClass("on");
+    			check_img.addClass("off");
+    		}
+
+    		var ad="";//提前日期
+    		$(".birimgdiv").each(function(){
+    			var m=$(this);
+    			if($(this).hasClass("on")){
+    				if(ad==''){
+        				ad=$(this).attr("myvalue");
+    				}else{
+        				ad=ad+","+$(this).attr("myvalue");
+    				}
+    			}
+    		  });
+    		$("#ADVANCE_DATE_COUNT").val(ad);
+    		/* console.info($obj.find(".birimgdiv").first().html()); */
+    	}
+    </script>
 </body></html>
