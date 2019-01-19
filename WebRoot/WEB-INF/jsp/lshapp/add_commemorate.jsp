@@ -188,10 +188,10 @@
 				</div>
 			</li>
 
-		</ul>
+		</ul><!--
 		<div style="height:25px;width:100%;background:#eeeeee;line-height:25px;color:#a0a0a0">
 				&nbsp;&nbsp;&nbsp;&nbsp;双历提醒
-		</div>
+		</div> -->
     </div>
 </div>
 

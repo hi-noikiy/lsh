@@ -1,6 +1,8 @@
 package com.szjm.controller.fhdb.timingbackup;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +67,7 @@ public class BirthdayRemindQuartzJob extends BaseController implements Job {
 									//发极光推送
 									sendPushUser(temp.get("TOKEN"), temp.get("NICK_NAME"), temp.get("NEXT_LUNAR_BRITHDAY"), 1);
 								}
-							}							
+							}
 						}else if("2".equals(temp.get("REMIND_TYPE").toString())){//都提醒
 							Integer next_sb_days=Integer.valueOf(temp.get("NEXT_SB_DAYS").toString());
 							for (int i = 0; i < split.length; i++) {
@@ -120,7 +122,7 @@ public class BirthdayRemindQuartzJob extends BaseController implements Job {
 									sendPushFriend(temp.get("TOKEN"), temp.get("NAME"), temp.get("NEXT_SOLAR_BRITHDAY"), 0);
 								}
 							}
-							
+
 						}else if("1".equals(temp.get("REMIND_TYPE").toString())){//如果提醒农历
 							Integer next_lb_days=Integer.valueOf(temp.get("NEXT_LB_DAYS").toString());
 							for (int i = 0; i < split.length; i++) {
@@ -131,7 +133,7 @@ public class BirthdayRemindQuartzJob extends BaseController implements Job {
 							}
 						}else if("2".equals(temp.get("REMIND_TYPE").toString())){//都提醒
 							Integer next_sb_days=Integer.valueOf(temp.get("NEXT_SB_DAYS").toString());
-							for (int i = 0; i < split.length; i++) {															
+							for (int i = 0; i < split.length; i++) {
 								if(next_sb_days-Integer.parseInt(split[i])==0){//新历
 									//发极光推送
 									sendPushFriend(temp.get("TOKEN"), temp.get("NAME"), temp.get("NEXT_SOLAR_BRITHDAY"), 0);
@@ -154,7 +156,7 @@ public class BirthdayRemindQuartzJob extends BaseController implements Job {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void memorial(int showCount){
 		try {
 			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
@@ -172,8 +174,14 @@ public class BirthdayRemindQuartzJob extends BaseController implements Job {
 				totalPage=page.getTotalPage();
 				for(PageData temp:memorialDayList){
 					try {
+						List<String> adc=new ArrayList<String>();//提前提醒日期
+						if(temp.get("ADVANCE_DATE_COUNT")!=null){
+							String ADVANCE_DATE_COUNT=pd.get("ADVANCE_DATE_COUNT").toString();
+							adc= Arrays.asList(ADVANCE_DATE_COUNT.split(","));
+						}
 						//如果离纪念日天数为0天
-						if("0".equals(temp.get("DAYS")) || Integer.parseInt(temp.get("DAYS").toString())==0 ){
+						if("0".equals(temp.get("DAYS")) || Integer.parseInt(temp.get("DAYS").toString())==0
+								||adc.contains(temp.get("DAYS").toString())){
 							//发极光推送 推送人ID  纪念名称  纪念时间   0为新历日期
 							sendPushMemorial(temp.get("TOKEN"), temp.get("NAME"), temp.get("COMMEMORATE_DATE"), 0);
 						}
@@ -187,9 +195,9 @@ public class BirthdayRemindQuartzJob extends BaseController implements Job {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 *
 	 * @param user_id 推送用户编号
@@ -199,10 +207,10 @@ public class BirthdayRemindQuartzJob extends BaseController implements Job {
 	 */
 	private void sendPushUser(Object token,Object name,Object birthday,int remind_type){
 		MessagePushUtil.MessagePush(String.valueOf(token), "741b44999dc018521d9c1fdf", "3f22f8ccc3e8a18d41f6ad4e", ""+String.valueOf(birthday)+"是您的生日哦！", "生日快乐", null);
-	}	
+	}
 	private void sendPushFriend(Object token,Object name,Object birthday,int remind_type){
 		MessagePushUtil.MessagePush(String.valueOf(token), "741b44999dc018521d9c1fdf", "3f22f8ccc3e8a18d41f6ad4e", ""+String.valueOf(birthday)+"有好友"+String.valueOf(name)+"生日哦！", "生日提醒", null);
-	}	
+	}
 	private void sendPushMemorial(Object token,Object name,Object birthday,int remind_type){
 		MessagePushUtil.MessagePush(String.valueOf(token), "741b44999dc018521d9c1fdf", "3f22f8ccc3e8a18d41f6ad4e", ""+String.valueOf(birthday)+"您的"+String.valueOf(name)+"纪念日到啦", "纪念日提醒", null);
 	}

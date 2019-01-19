@@ -59,31 +59,31 @@
 		update
 		<include refid="tableName"></include>
 		set
-			<if test="USER_ID!=null and USER_ID!=''">	
+			<if test="USER_ID!=null and USER_ID!=''">
 			USER_ID = #{USER_ID},
 			</if>
-			<if test="CREATE_DATE!=null and CREATE_DATE!=''">	
+			<if test="CREATE_DATE!=null and CREATE_DATE!=''">
 			CREATE_DATE = #{CREATE_DATE},
 			</if>
-			<if test="CREATE_USER!=null and CREATE_USER!=''">	
+			<if test="CREATE_USER!=null and CREATE_USER!=''">
 			CREATE_USER = #{CREATE_USER},
 			</if>
-			<if test="UPDATE_DATE!=null and UPDATE_DATE!=''">	
+			<if test="UPDATE_DATE!=null and UPDATE_DATE!=''">
 			UPDATE_DATE = #{UPDATE_DATE},
 			</if>
-			<if test="UPDATE_USER!=null and UPDATE_USER!=''">	
+			<if test="UPDATE_USER!=null and UPDATE_USER!=''">
 			UPDATE_USER = #{UPDATE_USER},
 			</if>
-			<if test="DELETE_STATUS!=null and DELETE_STATUS!=''">	
+			<if test="DELETE_STATUS!=null and DELETE_STATUS!=''">
 			DELETE_STATUS = #{DELETE_STATUS},
 			</if>
-			<if test="NAME!=null and NAME!=''">	
+			<if test="NAME!=null and NAME!=''">
 			NAME = #{NAME},
 			</if>
-			<if test="COMMEMORATE_DATE!=null and COMMEMORATE_DATE!=''">	
+			<if test="COMMEMORATE_DATE!=null and COMMEMORATE_DATE!=''">
 			COMMEMORATE_DATE = #{COMMEMORATE_DATE},
 			</if>
-			<if test="ADVANCE_DATE_COUNT!=null and ADVANCE_DATE_COUNT!=''">	
+			<if test="ADVANCE_DATE_COUNT!=null and ADVANCE_DATE_COUNT!=''">
 			ADVANCE_DATE_COUNT = #{ADVANCE_DATE_COUNT},
 			</if>
 			MEMORIALDAY_ID = MEMORIALDAY_ID
@@ -163,9 +163,9 @@
 			user_id = #{USER_ID}
 		ORDER BY a.days ASC
 	</select>
-	
-	
-	
+
+
+
 	<!-- 定时任务 -->
 	<select id="datalistPage2" parameterType="pd" resultType="pd">
 			SELECT
@@ -176,6 +176,7 @@
 					t. NAME,
 					t.COMMEMORATE_DATE,
 					t.MEMORIALDAY_ID,
+					t.ADVANCE_DATE_COUNT,
 					t.USER_ID,
 					t.CREATE_DATE,
 					t.TOKEN,
@@ -187,7 +188,7 @@
 				END DAYS
 				FROM
 					(
-						SELECT d.NAME,d.commemorate_date,d.memorialday_id,d.user_id,d.create_date,u.token,
+						SELECT d.NAME,d.commemorate_date,d.memorialday_id,d.advance_date_count,d.user_id,d.create_date,u.token,
 							DATEDIFF(
 								CONCAT(
 									DATE_FORMAT(NOW(), '%Y') + 1,
@@ -207,8 +208,8 @@
 					) t
 			) a
 	</select>
-	
-	
+
+
 
 	<!-- 批量删除 -->
 	<delete id="deleteAll" parameterType="String">
