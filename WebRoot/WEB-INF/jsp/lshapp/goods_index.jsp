@@ -119,7 +119,9 @@
 
 				<section class="goods-price padding-all b-color-f">
 					<p class="p-price">
-						<span class="t-first" id="ECS_SHOPPRICE">¥${goods.CURRENT_PRICE }
+						<span class="t-first" id="ECS_SHOPPRICE">
+						<%-- ¥${goods.CURRENT_PRICE } --%>
+						¥${goods.CURRENT_PRICE-goods.DEDUCTION_MONEY }+礼豆${goods.DEDUCTION_MONEY }
 							&nbsp;<span
 							style="color:gray;font-size: 1.1rem;text-decoration: line-through;">¥${goods.ORIGINAL_PRICE }</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;销量${goods.SALES_VOLUME }
 						</span>

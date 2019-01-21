@@ -149,7 +149,7 @@
 			<li onclick="check(this)"  class="licls">
 				<div class="wenzi">
 					生日当天
-					<div class="birimgdiv <c:if test="${fn:contains(adc, '0')}">on</c:if><c:if test="${!fn:contains(adc, '0')}">off</c:if>" myvalue="0">
+					<div class="birimgdiv <c:if test="${adc.contains('0')}">on</c:if><c:if test="${!adc.contains('0')}">off</c:if>" myvalue="0">
 						<img alt="" src="static/lshapp/images/Selected_red.png" style="width: 20px;height: 20px"></img>
 					</div>
 				</div>
@@ -158,7 +158,7 @@
 			<li onclick="check(this)" class="licls">
 				<div class="wenzi">
 				提前一天
-				<div class="birimgdiv <c:if test="${fn:contains(adc, '1')}">on</c:if><c:if test="${!fn:contains(adc, '1')}">off</c:if>"  myvalue="1">
+				<div class="birimgdiv <c:if test="${adc.contains('1')}">on</c:if><c:if test="${!adc.contains('1')}">off</c:if>"  myvalue="1">
 						<img alt="" src="static/lshapp/images/Selected_red.png" style="width: 20px;height: 20px"></img>
 				</div>
 				</div>
@@ -166,7 +166,7 @@
 			<li onclick="check(this)"  class="licls">
 				<div class="wenzi">
 				提前三天
-				<div class="birimgdiv <c:if test="${fn:contains(adc, '3')}">on</c:if><c:if test="${!fn:contains(adc, '3')}">off</c:if>" myvalue="3">
+				<div class="birimgdiv <c:if test="${adc.contains('3')}">on</c:if><c:if test="${!adc.contains('3')}">off</c:if>" myvalue="3">
 						<img alt="" src="static/lshapp/images/Selected_red.png" style="width: 20px;height: 20px"></img>
 					</div>
 				</div>
@@ -174,7 +174,7 @@
 			<li onclick="check(this)" class="licls">
 				<div class="wenzi">
 				提前七天
-				<div class="birimgdiv <c:if test="${fn:contains(adc, '7')}">on</c:if><c:if test="${!fn:contains(adc, '7')}">off</c:if>"  myvalue="7">
+				<div class="birimgdiv <c:if test="${adc.contains('7')}">on</c:if><c:if test="${!adc.contains('7')}">off</c:if>"  myvalue="7">
 						<img alt="" src="static/lshapp/images/Selected_red.png" style="width: 20px;height: 20px"></img>
 					</div>
 				</div>
@@ -182,7 +182,7 @@
 			<li onclick="check(this)"  class="licls">
 				<div class="wenzi">
 				提前三十天
-				<div class="birimgdiv <c:if test="${fn:contains(adc, '30')}">on</c:if><c:if test="${!fn:contains(adc, '30')}">off</c:if>" myvalue="30">
+				<div class="birimgdiv <c:if test="${adc.contains('30')}">on</c:if><c:if test="${!adc.contains('30')}">off</c:if>" myvalue="30">
 						<img alt="" src="static/lshapp/images/Selected_red.png" style="width: 20px;height: 20px"></img>
 					</div>
 				</div>
