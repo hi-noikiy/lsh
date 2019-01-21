@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -17,11 +15,13 @@ import com.szjm.entity.Page;
 import com.szjm.service.lsh.birthday.impl.BirthdayService;
 import com.szjm.service.lsh.lshuser.impl.LshUserService;
 import com.szjm.service.lsh.memorialday.impl.MemorialDayService;
+import com.szjm.util.Logger;
 import com.szjm.util.PageData;
 import com.szjm.util.SpringUtil;
 import com.szjm.util.lsh.MessagePushUtil;
 
 public class BirthdayRemindQuartzJob extends BaseController implements Job {
+    Logger logger = Logger.getLogger(this.getClass());
 
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
@@ -85,12 +85,13 @@ public class BirthdayRemindQuartzJob extends BaseController implements Job {
 						}
 					} catch (Exception e) {
 						// TODO: handle exception
+						logger.error("出错了！", e);
 					}
 				}
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("出错了！", e);
 		}
 	}
 	private void remindBirthday(int showCount){
@@ -148,12 +149,13 @@ public class BirthdayRemindQuartzJob extends BaseController implements Job {
 						}
 					} catch (Exception e) {
 						// TODO: handle exception
+						logger.error("出错了！", e);
 					}
 				}
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("出错了！", e);
 		}
 	}
 
@@ -176,7 +178,7 @@ public class BirthdayRemindQuartzJob extends BaseController implements Job {
 					try {
 						List<String> adc=new ArrayList<String>();//提前提醒日期
 						if(temp.get("ADVANCE_DATE_COUNT")!=null){
-							String ADVANCE_DATE_COUNT=pd.get("ADVANCE_DATE_COUNT").toString();
+							String ADVANCE_DATE_COUNT=temp.get("ADVANCE_DATE_COUNT").toString();
 							adc= Arrays.asList(ADVANCE_DATE_COUNT.split(","));
 						}
 						//如果离纪念日天数为0天
@@ -187,12 +189,13 @@ public class BirthdayRemindQuartzJob extends BaseController implements Job {
 						}
 					} catch (Exception e) {
 						// TODO: handle exception
+						logger.error("出错了！", e);
 					}
 				}
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("出错了！", e);
 		}
 	}
 

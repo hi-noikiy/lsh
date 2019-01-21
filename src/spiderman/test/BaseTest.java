@@ -59,6 +59,7 @@ import spiderman.wechat.util.WechatInterfaceInvokeUtil;
 import com.alipay.api.AlipayApiException;
 import com.szjm.util.lsh.BirthdayUtil;
 import com.szjm.util.lsh.CalendarUtil;
+import com.szjm.util.lsh.MessagePushUtil;
 
 public class BaseTest {
 	@Test
@@ -623,5 +624,9 @@ public class BaseTest {
 		companyPaySend.setSpbill_create_ip("127.0.0.1");
 		CompanyPayResult result=AppWechatInterfaceInvokeUtil.companyPay(companyPaySend);
 		System.out.println(result.isSuccess());//我..ni
+	}
+	@Test
+	public void test52(){
+		MessagePushUtil.MessagePush("636248230f1545f584b9b15b31826629", "741b44999dc018521d9c1fdf", "3f22f8ccc3e8a18d41f6ad4e", "您的纪念日到啦", "纪念日提醒", null);
 	}
 }

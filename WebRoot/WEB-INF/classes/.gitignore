@@ -1,9 +1,6 @@
-/ftl/
-/log4j.properties
-/log4j.xml
-/mybatis1/
 /com/
 /dbconfig.properties
 /dbfh.properties
 /ehcache.xml
+/ftl/
 /spiderman/

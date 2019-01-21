@@ -25,6 +25,7 @@ public class Starting implements InitializingBean{
 
             QuartzManager.removeJob("myjob1", "myjob1", "myjob1", "myjob1");
             QuartzManager.addJob("myjob1","myjob1", "myjob1", "myjob1", BirthdayRemindQuartzJob.class, "0 0 8 * * ?" ,parameter);
+            //QuartzManager.addJob("myjob1","myjob1", "myjob1", "myjob1", BirthdayRemindQuartzJob.class, "0 */1 * * * ?" ,parameter);
         } catch (Exception e) {
 			// TODO: handle exception
 		}
