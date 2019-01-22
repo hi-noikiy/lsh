@@ -30,7 +30,7 @@ import com.szjm.util.Tools;
 
 /**
  * 说明： 订单管理 创建人： 创建时间：2018-07-11
- * 
+ *
  * @version
  */
 @Service("orderService")
@@ -57,7 +57,7 @@ public class OrderService implements OrderManager {
 
 	/**
 	 * 新增
-	 * 
+	 *
 	 * @param pd
 	 * @throws Exception
 	 */
@@ -67,7 +67,7 @@ public class OrderService implements OrderManager {
 
 	/**
 	 * 删除
-	 * 
+	 *
 	 * @param pd
 	 * @throws Exception
 	 */
@@ -77,7 +77,7 @@ public class OrderService implements OrderManager {
 
 	/**
 	 * 修改
-	 * 
+	 *
 	 * @param pd
 	 * @throws Exception
 	 */
@@ -87,7 +87,7 @@ public class OrderService implements OrderManager {
 
 	/**
 	 * 列表
-	 * 
+	 *
 	 * @param page
 	 * @throws Exception
 	 */
@@ -99,7 +99,7 @@ public class OrderService implements OrderManager {
 
 	/**
 	 * 移动端订单列表
-	 * 
+	 *
 	 * @param page
 	 * @throws Exception
 	 */
@@ -111,7 +111,7 @@ public class OrderService implements OrderManager {
 
 	/**
 	 * 列表(全部)
-	 * 
+	 *
 	 * @param pd
 	 * @throws Exception
 	 */
@@ -122,7 +122,7 @@ public class OrderService implements OrderManager {
 
 	/**
 	 * 通过id获取数据
-	 * 
+	 *
 	 * @param pd
 	 * @throws Exception
 	 */
@@ -132,7 +132,7 @@ public class OrderService implements OrderManager {
 
 	/**
 	 * 通过id获取数据
-	 * 
+	 *
 	 * @param pd
 	 * @throws Exception
 	 */
@@ -143,7 +143,7 @@ public class OrderService implements OrderManager {
 
 	/**
 	 * 批量删除
-	 * 
+	 *
 	 * @param ArrayDATA_IDS
 	 * @throws Exception
 	 */
@@ -153,9 +153,9 @@ public class OrderService implements OrderManager {
 
 	/**
 	 * 订单完成
-	 * 
+	 *
 	 * @throws Exception
-	 * 
+	 *
 	 */
 	public void finishOrder(String out_order_id) throws Exception {
 		PageData order = new PageData(); // 订单
@@ -209,7 +209,7 @@ public class OrderService implements OrderManager {
 
 	/**
 	 * 获取支付信息
-	 * 
+	 *
 	 * @param real_pay
 	 *            支付金额
 	 * @param out_order_id
@@ -231,7 +231,7 @@ public class OrderService implements OrderManager {
 			/*String alipayMessge = AlipayInterfaceInvokeUtil.AlipayTradeAppPay(
 					"礼尚汇商品", "礼尚汇支付", out_order_id, real_pay);*/
 			String alipayMessge = AlipayInterfaceInvokeUtil.AlipayTradeAppPay(
-					"礼尚汇商品", "礼尚汇支付", out_order_id, "0.01");
+					"礼尚汇商品", "礼尚汇支付", out_order_id, real_pay);
 			aliResult.put("alipaymessge", alipayMessge
 					.replaceAll("\u003d", "=").replaceAll("\u0026", "&"));
 			aliResult.put("order_id", order_id);
@@ -247,8 +247,8 @@ public class OrderService implements OrderManager {
 			if (fee.contains(".")) {
 				fee = fee.substring(0, fee.indexOf("."));
 			}
-			//unifiedOrderSend.setTotal_fee(Integer.valueOf(fee));
-			unifiedOrderSend.setTotal_fee(1);
+			unifiedOrderSend.setTotal_fee(Integer.valueOf(fee));
+			//unifiedOrderSend.setTotal_fee(1);
 			unifiedOrderSend.setSpbill_create_ip(ipAddress);
 			unifiedOrderSend.setTrade_type("APP");
 			UnifiedOrderResult result = AppWechatInterfaceInvokeUtil
@@ -264,7 +264,7 @@ public class OrderService implements OrderManager {
 
 	/**
 	 * 用户创建订单
-	 * 
+	 *
 	 * @param pd
 	 * @throws Exception
 	 */
@@ -274,7 +274,7 @@ public class OrderService implements OrderManager {
 
 	/**
 	 * 用户获取订单详情
-	 * 
+	 *
 	 * @param pd
 	 * @throws Exception
 	 */
@@ -284,7 +284,7 @@ public class OrderService implements OrderManager {
 
 	/**
 	 * 订单取消或支付失败时再次支付更新支付编号
-	 * 
+	 *
 	 * @param pd
 	 * @throws Exception
 	 */
